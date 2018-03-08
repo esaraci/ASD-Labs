@@ -3,7 +3,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-edges = np.loadtxt('Cit-HepTh.txt', dtype=int)
+edges = np.loadtxt('./cit-HepTh.txt', dtype=int)
 
 coda = edges[:, 0]
 testa = edges[:, 1]
@@ -13,10 +13,12 @@ y = set(testa)
 
 z = x.union(y)
 
-print len(z)
+print(len(z))
 
 adj_list = {}
 node_in_degrees = {}
+
+
 
 for i in z:
     adj_list[i] = []
@@ -24,19 +26,28 @@ for i in z:
 
 for i in edges:
     adj_list[i[0]].append(i[1])
-    node_in_degrees[i[1]]+=1
+    node_in_degrees[i[1]] += 1
 
 in_degrees = np.zeros(len(z))
 
 for i in z:
-    in_degrees[node_in_degrees[i]]+=1
+    in_degrees[node_in_degrees[i]] += 1
 
-print in_degrees
+print(in_degrees)
 
-real_in_degrees = [(x/len(z)) for x in in_degrees if x!=0]
+real_in_degrees = [(x/len(z)) for x in in_degrees if x != 0]
 
-print sum(real_in_degrees)
-print len(real_in_degrees)
+out_degrees = np.zeros(len(z))
+
+print(sum(real_in_degrees))
+print(len(real_in_degrees))
+
+for i in adj_list:
+    print("bello", len(adj_list[i]))
+    out_degrees[len(adj_list[i])]+=1
+
+print("media grado uscente")  # serve per esercizio 3
+print(np.average(out_degrees))
 
 fig, ax = plt.subplots()
 ax.set_xscale('log', basex=10)
