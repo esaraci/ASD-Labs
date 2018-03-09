@@ -43,11 +43,18 @@ print(sum(real_in_degrees))
 print(len(real_in_degrees))
 
 for i in adj_list:
-    print("bello", len(adj_list[i]))
+#    print(i, adj_list[i])
     out_degrees[len(adj_list[i])]+=1
 
+av = 0
+
+for i in range(len(out_degrees)):
+    av += out_degrees[i]*i
+
+av = av/(len(out_degrees))
+
 print("media grado uscente")  # serve per esercizio 3
-print(np.average(out_degrees))
+print(av)
 
 fig, ax = plt.subplots()
 ax.set_xscale('log', basex=10)

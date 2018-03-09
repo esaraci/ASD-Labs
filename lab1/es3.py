@@ -65,14 +65,14 @@ def tot_in_degree(V, E):
 if __name__ == '__main__':
 
     n = 27770
-    m = 1
+    m = 13 #arrotondamento di 12.7046092906, media del grado uscente del grafo dell'es 1
 
     fig, ax = plt.subplots()
     ax.set_xscale('log', basex=10)
     ax.set_yscale('log', basey=10)
 
     axes = plt.gca()
-    axes.set_xlim([0.9, 200])
+    axes.set_xlim([0.9, 400])
 
     vertices, edges = DPA(n, m)
     real_in_degrees = tot_in_degree(vertices, edges)
