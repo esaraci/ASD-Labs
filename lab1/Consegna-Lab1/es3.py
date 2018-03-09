@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class DPATrial:
     def __init__(self, m):
         self.numNodes = m  # numero iniziale di nodi
-        self.nodeNumbers = []  #
+        self.nodeNumbers = [] 
 
         for i in range(m):
             for j in range(m):
@@ -16,7 +16,7 @@ class DPATrial:
         V = set()
 
         for i in range(m):
-            u = random.choice(self.nodeNumbers) # estreatto a caso
+            u = random.choice(self.nodeNumbers) # estratto a caso
             V.add(u)
 
         self.nodeNumbers.append(self.numNodes)
