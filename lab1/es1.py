@@ -61,7 +61,7 @@ ax.set_xscale('log', basex=10)
 ax.set_yscale('log', basey=10)
 
 axes = plt.gca()
-axes.set_xlim([0.9, 400])
+# axes.set_xlim([0.9, 400])
 
 ax.scatter(np.arange(len(real_in_degrees)), real_in_degrees, s=10)
 plt.xlabel("In-degree")
