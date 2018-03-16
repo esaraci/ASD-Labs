@@ -26,7 +26,7 @@ def tot_in_degree(V, E):
     for i in V:
         in_degrees[in_degree(E, i)]+=1
 
-    real_in_degrees = [(x/len(V)) for x in in_degrees]
+    real_in_degrees = [(x/len(V)) for x in in_degrees if x!=0]
 
     return real_in_degrees
 
@@ -50,5 +50,5 @@ if __name__ == '__main__':
         plt.xlabel("In-degree")
         plt.ylabel("Probability")
 
-        plt.scatter(np.arange(len(real_in_degrees)), real_in_degrees, s=10)
+        ax.scatter(np.arange(len(real_in_degrees)), real_in_degrees, s=10)
         plt.savefig("es2_{}.png".format(i))
