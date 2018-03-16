@@ -35,7 +35,7 @@ for i in z:
 
 print(in_degrees)
 
-real_in_degrees = [(x/len(z)) for x in in_degrees if x != 0]
+real_in_degrees = [(x/len(z)) for x in in_degrees]
 
 out_degrees = np.zeros(len(z))
 

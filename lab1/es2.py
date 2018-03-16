@@ -50,5 +50,5 @@ if __name__ == '__main__':
         plt.xlabel("In-degree")
         plt.ylabel("Probability")
 
-        ax.scatter(np.arange(len(real_in_degrees)), real_in_degrees, s=10)
+        plt.scatter(np.arange(len(real_in_degrees)), real_in_degrees, s=10)
         plt.savefig("es2_{}.png".format(i))
