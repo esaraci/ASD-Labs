@@ -29,7 +29,7 @@ in_degrees = np.zeros(len(z))
 for i in z:
     in_degrees[node_in_degrees[i]] += 1
 
-real_in_degrees = [(x/len(z)) for x in in_degrees if x != 0]
+real_in_degrees = [(x/len(z)) for x in in_degrees]
 
 out_degrees = np.zeros(len(z))
 
@@ -51,7 +51,7 @@ ax.set_xscale('log', basex=10)
 ax.set_yscale('log', basey=10)
 
 axes = plt.gca()
-axes.set_xlim([0.9, 400])
+axes.set_xlim([0.9, 800])
 
 ax.scatter(np.arange(len(real_in_degrees)), real_in_degrees, s=10)
 plt.xlabel("In-degree")

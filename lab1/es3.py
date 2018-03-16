@@ -52,7 +52,7 @@ def tot_in_degree(V, E):
     for i in V:
         in_degrees[in_degree(E, i)]+=1
 
-    real_in_degrees = [(x/len(V)) for x in in_degrees if x != 0]
+    real_in_degrees = [(x/len(V)) for x in in_degrees]
 
     return real_in_degrees
 
