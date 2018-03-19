@@ -16,7 +16,7 @@ class UPATrial:
         V = set()
 
         for i in range(m):  # estrae m nodi sempre
-            u = random.choice(self.nodeNumbers) # estreatto a caso
+            u = random.choice(self.nodeNumbers) # estratto a caso
             V.add(u)  # contiene tutti i nodi estratti in questo turno
 
         for i in range(len(V)+1):  # len(V) può essere diverso da m perchè posso estrarre più volte lo stesso nodo
@@ -82,15 +82,17 @@ if __name__ == '__main__':
     mean = int(np.average(degrees))
 
     print("NODI NET:", n)
-    print("ARCHI NET:", sum([len(adj_list_net[i]) for i in z]))
+    print("ARCHI NET:", int(sum([len(adj_list_net[i]) for i in z])/2))  # /2 perchè ci sono 2 archi
 
 
-    V_UPA, E_UPA = UPA(n, mean)
+    # mean non serve, la grado medio di NET ha un significato diverso su UPA
+    V_UPA, E_UPA = UPA(n, 2)
     # ADJ_UPA = create_adj_list_from_graph(V_UPA, E_UPA)
     print("NODI UPA:", len(V_UPA))
     print("ARCHI UPA:", len(E_UPA))
 
-    V_ER, E_ER = ER(n, 0.003)
+    V_ER, E_ER = ER(n, 0.0015)
     ADJ_ER = create_adj_list_from_graph(V_ER, E_ER)
     print("NODI ER:", len(V_ER))
     print("ARCHI ER:", len(E_ER))
+
