@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import random
 import matplotlib.pyplot as plt
 from enum import Enum
-
 
 class Color(Enum):
     WHITE = 0
@@ -39,6 +39,42 @@ class Graph:
                 if value == to_remove:
                     self.adj_list[i].pop(index)
 
+
+    def DFS_Visited(self, u, visited):
+        self.color[u] = Color.BLACK
+        visited.append(u)
+        for v in self.adj_list[u]:
+            if self.color[v] == Color.WHITE:
+                visited = self.DFS_Visited(v, visited)
+
+        return visited
+
+    def connected_components(self):
+        V = list(self.adj_list.keys())
+        for v in V:
+            self.color[v] = Color.WHITE
+        CC = []
+        for v in V:
+            if self.color[v] == Color.WHITE:
+                visited = []
+                # calcola le comp connesse partendo partendo da v
+                comp = self.DFS_Visited(v, visited)
+                CC.append(comp)
+
+        return CC
+
+
+    def get_resiliences(self):
+        resiliences = []
+        for i in range(n):
+            self.remove_node_from_graph()
+            CC = self.connected_components()
+            # print("CC", CC)
+            #compute_resilience non è metodo della classe
+            resilience = compute_resilience(CC)
+            # print("Resilienza", resilience)
+            resiliences.append(resilience)
+        return resiliences
 
 class UPATrial:
     def __init__(self, m):
@@ -78,17 +114,6 @@ def UPA(n, m):
             E.append((u, v))
     return V, E
 
-
-def DFS_Visited(graph, u, visited):
-    graph.color[u] = Color.BLACK
-    visited.append(u)
-    for v in graph.adj_list[u]:
-        if graph.color[v] == Color.WHITE:
-            visited = DFS_Visited(graph, v, visited)
-
-    return visited
-
-
 def compute_resilience(CC):
     max = 0
     for i in CC:
@@ -97,32 +122,6 @@ def compute_resilience(CC):
 
     return max
 
-
-def connected_components(graph):
-    V = list(graph.adj_list.keys())
-    for v in V:
-        graph.color[v] = Color.WHITE
-    CC = []
-    for v in V:
-        if graph.color[v] == Color.WHITE:
-            visited = []
-            # calcola le comp connesse partendo partendo da v
-            comp = DFS_Visited(graph, v, visited)
-            CC.append(comp)
-
-    return CC
-
-
-def get_resiliences(graph):
-    resiliences = []
-    for i in range(n):
-        graph.remove_node_from_graph()
-        CC = connected_components(graph)
-        # print("CC", CC)
-        resilience = compute_resilience(CC)
-        # print("Resilienza", resilience)
-        resiliences.append(resilience)
-    return resiliences
 
 def ER(n,p):
     V = [x for x in range(n)]
@@ -162,9 +161,9 @@ if __name__ == '__main__':
     print("NODI ER:", len(V_ER))
     print("ARCHI ER:", len(E_ER))
 
-    res_NET = get_resiliences(G_NET)
-    res_ER = get_resiliences(G_ER)
-    res_UPA = get_resiliences(G_UPA)
+    res_NET = G_NET.get_resiliences()
+    res_ER = G_ER.get_resiliences()
+    res_UPA = G_UPA.get_resiliences()
 
     plt.plot(np.arange(0, len(res_NET)), res_NET, label="Resilienza NET")
     plt.plot(np.arange(0, len(res_ER)), res_ER, label="Resilienza ER")
