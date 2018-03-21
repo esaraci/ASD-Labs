@@ -151,12 +151,14 @@ if __name__ == '__main__':
     print("NODI NET:", n)
     print("ARCHI NET:", int(sum([len(adj_list_net[i]) for i in z])/2))  # /2 perchè ci sono 2 archi
 
-    V_UPA, E_UPA = UPA(n, int(mean/2)) # rich get richer va bene
+    m=int(mean/2)
+    V_UPA, E_UPA = UPA(n, m) # rich get richer va bene
     G_UPA = Graph(V_UPA, E_UPA)
     print("NODI UPA:", len(V_UPA))
     print("ARCHI UPA:", len(E_UPA))
 
-    V_ER, E_ER = ER(n, 0.0014)
+    p=0.0014
+    V_ER, E_ER = ER(n, p)
     G_ER = Graph(V_ER, E_ER)
     print("NODI ER:", len(V_ER))
     print("ARCHI ER:", len(E_ER))
@@ -173,7 +175,7 @@ if __name__ == '__main__':
     plt.ylabel("Massima componente connessa")
     plt.title("Resilienza delle reti")
 
-    plt.text(0, 0, 'I valori scelti sono p=0.0014, m=2')
+    plt.text(0, 0, 'I valori scelti sono p='+str(p)+', m='+str(m))
     plt.savefig("lab2-es1.png")
 
     plt.show()
