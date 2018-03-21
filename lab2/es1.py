@@ -170,8 +170,10 @@ if __name__ == '__main__':
     plt.plot(np.arange(0, len(res_UPA)), res_UPA, label="Resilienza UPA")
     plt.legend()
     plt.xlabel("Nodi disabilitati")
-    plt.ylabel("Resilienza")
+    plt.ylabel("Massima componente connessa")
     plt.title("Resilienza delle reti")
+
+    plt.text(0, 0, 'I valori scelti sono p=0.0014, m=2')
     plt.savefig("lab2-es1.png")
 
     plt.show()
