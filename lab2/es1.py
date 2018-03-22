@@ -29,8 +29,25 @@ class Graph:
 
         return adj_list
 
-    def remove_node_from_graph(self):
-        to_remove = random.choice(list(self.adj_list.keys()))
+    def get_max_degree_node(self):
+        max = -1
+        key = None
+        for i in self.adj_list:
+            if len(self.adj_list[i]) > max:
+                max = len(self.adj_list[i])
+                key = i
+
+        print("Chiave:", key)
+        print("Nodi collegati:", self.adj_list[key])
+        print("Grado:", len(self.adj_list[key]))
+        return key
+
+
+
+#TODO: l'algoritmo va avanti fino a quando ha tolto tutti i nodi
+    def remove_node_from_graph(self, mode="random"):
+        # to remove = nodo da rimuovere, random = casuale, max = nodo con max grado
+        to_remove = self.get_max_degree_node() if mode == "max" else random.choice(list(self.adj_list.keys()))
         to_sanitize = self.adj_list.pop(to_remove)
         # print("NODO SCELTO", to_remove)
 
@@ -38,7 +55,6 @@ class Graph:
             for index, value in enumerate(self.adj_list[i]):
                 if value == to_remove:
                     self.adj_list[i].pop(index)
-
 
     def DFS_Visited(self, u, visited):
         self.color[u] = Color.BLACK
@@ -63,15 +79,24 @@ class Graph:
 
         return CC
 
+    def compute_resilience(self, CC):
+        max = 0
+        for i in CC:
+            if len(i) > max:
+                max = len(i)
 
-    def get_resiliences(self):
+        return max
+
+    def get_resiliences(self, p, mode="random"):
         resiliences = []
-        for i in range(n):
-            self.remove_node_from_graph()
+        for i in range(self.numNodes):
+            self.remove_node_from_graph(mode)
             CC = self.connected_components()
             # print("CC", CC)
-            #compute_resilience non è metodo della classe
-            resilience = compute_resilience(CC)
+            #TODO: compute_resilience non è metodo della classe
+            resilience = self.compute_resilience(CC)  # comp conn più grande in questo turno
+            if i + 1 == p:  # parte da 0
+                print("Resilienza dopo aver disattivato 20% di nodi:", 100/(self.numNodes - p + 1)*resilience, "%") #TODO +1 perche almeno una unita
             # print("Resilienza", resilience)
             resiliences.append(resilience)
         return resiliences
@@ -114,14 +139,6 @@ def UPA(n, m):
             E.append((u, v))
     return V, E
 
-def compute_resilience(CC):
-    max = 0
-    for i in CC:
-        if len(i) > max:
-            max = len(i)
-
-    return max
-
 
 def ER(n,p):
     V = [x for x in range(n)]
@@ -136,12 +153,13 @@ def ER(n,p):
 
 if __name__ == '__main__':
     data = np.loadtxt("./as19991212.txt", dtype=int)
-    coda = data[:,0]
-    testa = data[:,1]
+    coda = data[:, 0]
+    testa = data[:, 1]
     x = set(coda)
     y = set(testa)
     z = x.union(y)
     n = len(z)  # numero di nodi
+    twenty_percent = int(n * 0.20)  # frazione signifiicativa di nodi
 
     G_NET = Graph(z, data)
     adj_list_net = G_NET.adj_list
@@ -151,21 +169,23 @@ if __name__ == '__main__':
     print("NODI NET:", n)
     print("ARCHI NET:", int(sum([len(adj_list_net[i]) for i in z])/2))  # /2 perchè ci sono 2 archi
 
-    m=int(mean/2)
+    m = int(mean/2)
     V_UPA, E_UPA = UPA(n, m) # rich get richer va bene
     G_UPA = Graph(V_UPA, E_UPA)
     print("NODI UPA:", len(V_UPA))
     print("ARCHI UPA:", len(E_UPA))
 
-    p=0.0014
+    p = 0.0014
     V_ER, E_ER = ER(n, p)
     G_ER = Graph(V_ER, E_ER)
     print("NODI ER:", len(V_ER))
     print("ARCHI ER:", len(E_ER))
 
-    res_NET = G_NET.get_resiliences()
-    res_ER = G_ER.get_resiliences()
-    res_UPA = G_UPA.get_resiliences()
+    # modalità di attacco, "random" o "max"
+    mode = "max"
+    res_NET = G_NET.get_resiliences(n, mode)
+    res_ER = G_ER.get_resiliences(n, mode)
+    res_UPA = G_UPA.get_resiliences(n, mode)
 
     plt.plot(np.arange(0, len(res_NET)), res_NET, label="Resilienza NET")
     plt.plot(np.arange(0, len(res_ER)), res_ER, label="Resilienza ER")
@@ -175,7 +195,7 @@ if __name__ == '__main__':
     plt.ylabel("Massima componente connessa")
     plt.title("Resilienza delle reti")
 
-    plt.text(0, 0, 'I valori scelti sono p='+str(p)+', m='+str(m))
-    plt.savefig("lab2-es1.png")
+    plt.text(0, 0, 'p='+str(p)+', m='+str(m))
+    plt.savefig("lab2-es3.png")
 
     plt.show()

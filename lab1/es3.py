@@ -25,6 +25,14 @@ class DPATrial:
 
         return V
 
+
+class ClassName(object):
+    """docstring for ClassName"""
+    def __init__(self, arg):
+        super(ClassName, self).__init__()
+        self.arg = arg
+        
+        
 # n >= 1, 1 <= m <= n
 def DPA(n, m):
     V = [x for x in range(m)]
