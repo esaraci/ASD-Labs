@@ -37,9 +37,9 @@ class Graph:
                 max = len(self.adj_list[i])
                 key = i
 
-        print("Chiave:", key)
-        print("Nodi collegati:", self.adj_list[key])
-        print("Grado:", len(self.adj_list[key]))
+        #print("Chiave:", key)
+        #print("Nodi collegati:", self.adj_list[key])
+        #print("Grado:", len(self.adj_list[key]))
         return key
 
 
@@ -95,8 +95,9 @@ class Graph:
             # print("CC", CC)
             #TODO: compute_resilience non è metodo della classe
             resilience = self.compute_resilience(CC)  # comp conn più grande in questo turno
-            if i + 1 == p:  # parte da 0
-                print("Resilienza dopo aver disattivato 20% di nodi:", 100/(self.numNodes - p + 1)*resilience, "%") #TODO +1 perche almeno una unita
+            if (i + 1) == p:  # parte da 0
+                r=100*resilience/(self.numNodes - p )
+                print("Resilienza dopo aver disattivato 20% di nodi:"+str(r)+" %") #TODO +1 perche almeno una unita
             # print("Resilienza", resilience)
             resiliences.append(resilience)
         return resiliences
@@ -183,9 +184,13 @@ if __name__ == '__main__':
 
     # modalità di attacco, "random" o "max"
     mode = "max"
-    res_NET = G_NET.get_resiliences(n, mode)
-    res_ER = G_ER.get_resiliences(n, mode)
-    res_UPA = G_UPA.get_resiliences(n, mode)
+    #twentypercent serve a dire quando vogliamo fare la stampa della resilienza non cambia la funzione
+    print("Grafo NET")
+    res_NET = G_NET.get_resiliences(twenty_percent, mode)
+    print("Grafo ER")
+    res_ER = G_ER.get_resiliences(twenty_percent, mode)
+    print("Grafo UPA")
+    res_UPA = G_UPA.get_resiliences(twenty_percent, mode)
 
     plt.plot(np.arange(0, len(res_NET)), res_NET, label="Resilienza NET")
     plt.plot(np.arange(0, len(res_ER)), res_ER, label="Resilienza ER")
@@ -193,9 +198,8 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel("Nodi disabilitati")
     plt.ylabel("Massima componente connessa")
-    plt.title("Resilienza delle reti")
+    plt.title("Resilienza delle reti - Attacco mirato \n (p="+str(p)+", m="+str(m)+")")
 
-    plt.text(0, 0, 'p='+str(p)+', m='+str(m))
     plt.savefig("lab2-es3.png")
 
     plt.show()
