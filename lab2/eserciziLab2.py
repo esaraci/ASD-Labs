@@ -176,7 +176,7 @@ if __name__ == '__main__':
     print("ARCHI ER:", len(E_ER))
 
     # modalità di attacco, "random" o "mirato"
-    mode = "mirato"
+    mode = "random"
     # twenty_percent serve a dire quando vogliamo fare la stampa della resilienza non cambia la funzione
     print("Grafo NET")
     res_NET = G_NET.get_resiliences(twenty_percent, mode)
@@ -193,6 +193,6 @@ if __name__ == '__main__':
     plt.ylabel("Massima componente connessa")
     plt.title("Resilienza delle reti - Attacco " + str(mode) + "\n (p="+str(p)+", m="+str(m)+")")
 
-    plt.savefig("lab2-es3-"+str(mode)+".png")
+    plt.savefig("lab2-grafico-"+str(mode)+".png")
 
     plt.show()
