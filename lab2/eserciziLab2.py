@@ -4,6 +4,7 @@ import random
 import matplotlib.pyplot as plt
 from enum import Enum
 
+
 class Color(Enum):
     WHITE = 0
     GREY = 1
@@ -36,20 +37,15 @@ class Graph:
             if len(self.adj_list[i]) > max:
                 max = len(self.adj_list[i])
                 key = i
-
-        #print("Chiave:", key)
-        #print("Nodi collegati:", self.adj_list[key])
-        #print("Grado:", len(self.adj_list[key]))
         return key
 
 
 
-#TODO: l'algoritmo va avanti fino a quando ha tolto tutti i nodi
+
     def remove_node_from_graph(self, mode="random"):
-        # to remove = nodo da rimuovere, random = casuale, max = nodo con max grado
-        to_remove = self.get_max_degree_node() if mode == "max" else random.choice(list(self.adj_list.keys()))
+        # to remove = nodo da rimuovere, random = casuale, mirato = nodo con max grado
+        to_remove = self.get_max_degree_node() if mode == "mirato" else random.choice(list(self.adj_list.keys()))
         to_sanitize = self.adj_list.pop(to_remove)
-        # print("NODO SCELTO", to_remove)
 
         for i in to_sanitize: # pulendo la lista
             for index, value in enumerate(self.adj_list[i]):
@@ -92,20 +88,17 @@ class Graph:
         for i in range(self.numNodes):
             self.remove_node_from_graph(mode)
             CC = self.connected_components()
-            # print("CC", CC)
-            #TODO: compute_resilience non è metodo della classe
             resilience = self.compute_resilience(CC)  # comp conn più grande in questo turno
             if (i + 1) == p:  # parte da 0
-                r=100*resilience/(self.numNodes - p )
-                print("Resilienza dopo aver disattivato 20% di nodi:"+str(r)+" %") #TODO +1 perche almeno una unita
-            # print("Resilienza", resilience)
+                r = 100*resilience/(self.numNodes - p )
+                print("Resilienza dopo aver disattivato 20% di nodi:"+str(r)+" %")
             resiliences.append(resilience)
         return resiliences
 
 class UPATrial:
     def __init__(self, m):
         self.numNodes = m  # numero iniziale di nodi
-        self.nodeNumbers = []  # lista di 111122223333444455...
+        self.nodeNumbers = []  # lista di nodi che rappresentano la loro probabilità di essere estratti
 
         for i in range(m):
             for j in range(m):
@@ -171,7 +164,7 @@ if __name__ == '__main__':
     print("ARCHI NET:", int(sum([len(adj_list_net[i]) for i in z])/2))  # /2 perchè ci sono 2 archi
 
     m = int(mean/2)
-    V_UPA, E_UPA = UPA(n, m) # rich get richer va bene
+    V_UPA, E_UPA = UPA(n, m)  # rich get richer va bene
     G_UPA = Graph(V_UPA, E_UPA)
     print("NODI UPA:", len(V_UPA))
     print("ARCHI UPA:", len(E_UPA))
@@ -182,9 +175,9 @@ if __name__ == '__main__':
     print("NODI ER:", len(V_ER))
     print("ARCHI ER:", len(E_ER))
 
-    # modalità di attacco, "random" o "max"
-    mode = "max"
-    #twentypercent serve a dire quando vogliamo fare la stampa della resilienza non cambia la funzione
+    # modalità di attacco, "random" o "mirato"
+    mode = "mirato"
+    # twenty_percent serve a dire quando vogliamo fare la stampa della resilienza non cambia la funzione
     print("Grafo NET")
     res_NET = G_NET.get_resiliences(twenty_percent, mode)
     print("Grafo ER")
@@ -198,8 +191,8 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel("Nodi disabilitati")
     plt.ylabel("Massima componente connessa")
-    plt.title("Resilienza delle reti - Attacco mirato \n (p="+str(p)+", m="+str(m)+")")
+    plt.title("Resilienza delle reti - Attacco " + str(mode) + "\n (p="+str(p)+", m="+str(m)+")")
 
-    plt.savefig("lab2-es3.png")
+    plt.savefig("lab2-es3-"+str(mode)+".png")
 
     plt.show()
