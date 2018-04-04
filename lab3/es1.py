@@ -40,7 +40,7 @@ class PriorityQueue:
             p = self.parent(i)
 
     def decrease_key(self, node, old_val, new_val):
-        i = self.heap.index((old_val, node))
+        i = self.heap.index([old_val, node])
         if self.heap[i][0] < new_val:  # controllo concettuale
             return False
 
@@ -74,9 +74,10 @@ def dijkstra(V, adj_list):
 
             # h.append((edge[0] / 1000 / SPEED_LIMIT[edge[1]] * 3600, (u, v)))
 
-    Q = PriorityQueue([(cost, node) for node, cost in dict_distances.items()])
+    Q = PriorityQueue([[cost, node] for node, cost in dict_distances.items()])
     while not Q.is_empty():
         u = Q.extract_min()  # u = (distance, u) distanza per arrivare al nodo u
+        print(u)
         for v in adj_list[u[1]]:  # dict_distances = costo/distanza per arrivare a v
             print("V", v)
             if dict_distances[u[1]] + weights[(u[1], v)] < dict_distances[v]:
