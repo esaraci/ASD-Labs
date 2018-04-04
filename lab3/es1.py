@@ -15,21 +15,6 @@ destinations = [261510687, 3522821903, 65319958, 65325408, 65295403, 258913493] 
 # tempo di percorrenza: int((km / (km/h)) * 3600)
 
 
-
-class Node:
-    def __init__(self, info):
-        self.info = info
-        self.distance = INFINITY
-
-    def get_info(self):
-        return self.info
-
-    def get_distance(self):
-        return self.distance
-
-
-
-
 class PriorityQueue:
     def __init__(self, heap):
         self.heap = heap
@@ -54,10 +39,12 @@ class PriorityQueue:
             i = p
             p = self.parent(i)
 
-    def decrease_key(self, i, new_val):
+    def decrease_key(self, node, old_val, new_val):
+        i = self.heap.index((old_val, node))
         if self.heap[i][0] < new_val:  # controllo concettuale
             return False
 
+        print(self.heap[i][0])
         self.heap[i][0] = new_val
         self.bubble_up(i)
         return True
@@ -66,16 +53,16 @@ class PriorityQueue:
 def dijkstra(V, adj_list):
     # INIT SSSP
     parents = {}
-    distances = [] # distanza in secondi di un nodo dalla radice inzialmente infinita
-    dict_distances = {}
+    dict_distances = {} # dizionario delle distanze
     weights = {} # costo dell arco fra i due nodi
 
+    for s in sources:
+        weights[(0, s)] = 0
+
     for v in V:
-        distances.append((INFINITY, v)) # (costo, nodo)
         dict_distances[v] = INFINITY
         parents[v] = None
 
-    distances.append((0, 0))  # distanza dal nodo supersorgente a se stesso = 0
     dict_distances[0] = 0
     # END INIT SSSP
 
@@ -84,15 +71,21 @@ def dijkstra(V, adj_list):
         for u in adj_list[v].keys():
             edge = adj_list[v][u]  # edge[0] = length, edge[1] road_type
             weights[(u, v)] = edge[0] / 1000 / SPEED_LIMIT[edge[1]] * 3600 # aggiungo peso dell'arco in secondi
+
             # h.append((edge[0] / 1000 / SPEED_LIMIT[edge[1]] * 3600, (u, v)))
 
-    print(distances)
-    Q = PriorityQueue(distances)
-    print(Q.get_heap())
+    Q = PriorityQueue([(cost, node) for node, cost in dict_distances.items()])
     while not Q.is_empty():
-        u = Q.extract_min()
-        for v in adj_list[u[1]]:
-            if distances[u[1]]
+        u = Q.extract_min()  # u = (distance, u) distanza per arrivare al nodo u
+        for v in adj_list[u[1]]:  # dict_distances = costo/distanza per arrivare a v
+            print("V", v)
+            if dict_distances[u[1]] + weights[(u[1], v)] < dict_distances[v]:
+                # BEGIN RELAX
+                old_val = dict_distances[v]
+                dict_distances[v] = dict_distances[u[1]] + weights[(u[1], v)]
+                parents[v] = u[1]
+                # END RELAX
+                Q.decrease_key(v, old_val, dict_distances[v])
 
     # print("From Dijkstra:", Q)
     return Q
@@ -105,12 +98,14 @@ def ccrp(V, adj_list, sources, destinations):
         adj_list[0][s] = (0, -1)  # -1 = road_type di super
         # sorgente ovvero infinito
 
+    print("ADJ_0", adj_list[0])
+    return dijkstra(V, adj_list)
+
 
 def create_adj_list(V, tails, heads, length, road_type):
     adj_list = {}
     for v in V:
-        n = Node(v)
-        adj_list[n] = {}
+        adj_list[v] = {}
 
     for i, t in enumerate(tails):
         h = heads[i]
@@ -135,5 +130,5 @@ if __name__ == '__main__':
     n = len(z)
 
     adj_list = create_adj_list(z, tails, heads, length, road_type)
-
-    lul = dijkstra(z, adj_list)
+    lul = ccrp(z, adj_list, sources, destinations)
+    print(lul)
