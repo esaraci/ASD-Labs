@@ -50,6 +50,37 @@ class PriorityQueue:
         return True
 
 
+def get_flow(plan, adj_list):
+    # [dest, [cammino ...]]
+    # (adj_list[u][v])[1] = road_type
+
+    """
+    DOBBIAMO SCORRERE SOLO IL MINORE DEI CAMMINI
+    min_flow = INFINITY
+    for dest in plan:  # per ogni destinazione
+        for i, v in enumerate(plan[dest]):
+            if v != dest: # bound checking
+                next = plan[dest][i+1]
+                if CAPACITY[adj_list[v][next][1]] < min_flow: # converto capacity, assumo sia ordinata
+                    min_flow = CAPACITY[adj_list[v][next][1]] # aggiorno min
+
+    return min_flow
+    """
+
+
+def find_paths(parents):
+    # trovo il cammino minimo per ogni destination
+    dict_paths = {}
+    for dest in destinations:
+        path = [dest]
+        u = dest
+        while parents[u] is not None:
+            path.insert(0, parents[u])
+            u = parents[u]
+        dict_paths[dest] = path
+    return dict_paths
+
+
 def dijkstra(V, adj_list):
     # INIT SSSP
     parents = {} # padri dei nodi
@@ -63,6 +94,7 @@ def dijkstra(V, adj_list):
         dict_distances[v] = INFINITY
         parents[v] = None
 
+    parents[0] = None  # parent della super source
     dict_distances[0] = 0
     # END INIT SSSP
 
@@ -78,7 +110,7 @@ def dijkstra(V, adj_list):
 
     while not Q.is_empty():
         u = Q.extract_min()  # u = (distance, u) distanza per arrivare al nodo u
-        print("ExtractMin", u)
+        # print("ExtractMin", u)
         for v in adj_list[u[1]]:  # dict_distances = costo/distanza per arrivare a v
             # print(weights[(u[1], v)])
             if dict_distances[u[1]] + weights[(u[1], v)] < dict_distances[v]:
@@ -90,7 +122,7 @@ def dijkstra(V, adj_list):
                 Q.decrease_key(v, old_val, dict_distances[v])
 
     # print("From Dijkstra:", Q)
-    return Q
+    return parents
 
 
 def ccrp(V, adj_list, sources, destinations):
@@ -100,8 +132,11 @@ def ccrp(V, adj_list, sources, destinations):
         adj_list[0][s] = (0, -1)  # -1 = road_type di super
         # sorgente ovvero infinito
 
-    print("ADJ_0", adj_list[0])
-    return dijkstra(V, adj_list)
+    # print("ADJ_0", adj_list[0])
+    parents = dijkstra(V, adj_list)
+    plan = find_paths(parents)  # mappa dei cammini minimi dalla source alla dest
+    flow = get_flow(plan, adj_list)
+
 
 
 def create_adj_list(V, tails, heads, length, road_type):
@@ -112,8 +147,8 @@ def create_adj_list(V, tails, heads, length, road_type):
     for i, t in enumerate(tails):
         h = heads[i]
         if t != h:  # evita cappi
-            if h not in adj_list[t].keys():  # sono apposto devo aggiungere il nodo
-                adj_list[t][h] = (length[i], road_type[i])
+            if h not in adj_list[t].keys():  # sono a posto devo aggiungere il nodo
+                adj_list[t][h] = [length[i], road_type[i]]
 
     return adj_list
 
