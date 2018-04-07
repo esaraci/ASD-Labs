@@ -3,19 +3,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 import heapq
 
-INFINITY = float('inf')  # infinito secondo python
+
+# CONSTS
+INFINITY = float('inf')
+
+# Useful dictionaries for converting road_type to speed limits and capacities
 SPEED_LIMIT = {-1: INFINITY, 1: 30, 2: 50, 3: 50, 4: 70, 5: 70, 6: 90}
 CAPACITY = {-1: INFINITY, 1: 500, 2: 750, 3: 1000, 4: 1500, 5: 2000, 6: 4000}
 
-sources = [3718987342, 915248218, 65286004]  # insieme delle sorgenti
-destinations = [261510687, 3522821903, 65319958, 65325408, 65295403, 258913493]  # insieme delle destinazioni
+# sources and destinations of the evacuation plan
+sources = [3718987342, 915248218, 65286004]
+destinations = [261510687, 3522821903, 65319958, 65325408, 65295403, 258913493]
 
 
-# costo sono i secondi tempo di percorrenza
-# si parte da sorgente per forza perchè ha costo 0 e ordino per costo minimo
-# tempo di percorrenza: int((km / (km/h)) * 3600)
-
-
+# adapting heapq to our problem
 class PriorityQueue:
     def __init__(self, heap):
         self.heap = heap
@@ -34,15 +35,27 @@ class PriorityQueue:
         return len(self.heap) == 0
 
     def bubble_up(self, i):
+        """Takes the node with index i and puts it in the correct position to restore the heap state.
+        :param i: index of the node to bubble up
+        :return: None
+        """
         p = self.parent(i)
         while i > 0 and self.heap[i] < self.heap[p]:
-            self.heap[i], self.heap[p] = self.heap[p], self.heap[i]  # scambio valori fra parent e figlio
+            self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
             i = p
             p = self.parent(i)
 
     def decrease_key(self, node, old_val, new_val):
-        i = self.heap.index([old_val, node]) # ricavo l'indice dal vecchio valore per aggiornarlo successivamente
-        if self.heap[i][0] < new_val:  # controllo concettuale
+        """Updates the distance of the node (old_val) with the new computed distance (new_val), only if the latter
+        is greater than the first.
+
+        :param node: identifier of the node, it's not its index
+        :param old_val: used as heap.index([old_val, node]) just to find the index of the node that needs the update
+        :param new_val: value that will be assigned to the target node - only if new_val > old_val
+        :return:
+        """
+        i = self.heap.index([old_val, node])
+        if self.heap[i][0] < new_val:
             return False
 
         self.heap[i][0] = new_val
@@ -50,10 +63,51 @@ class PriorityQueue:
         return True
 
 
+def path_cost(path, weights):
+    """Returns the cost, in seconds, of the path.
+
+    :param path: path to evaluate, ordered list of nodes. In our case from super-source to a destination
+    :param weights: dictionary containing the costs of each edge, keys as tuples of nodes e.g. (u, v)
+    :return: cost of the path, in seconds
+    """
+    cost = 0
+    for i, u in enumerate(path):
+        if i+1 < len(path):  # bound checking
+            v = path[i+1]  # arriving end ot the node, (u --> v)
+            cost += weights[(u, v)]
+
+    return cost
+
+
+def get_path_with_min_cost(plan, weights):
+    """Returns the destination wich has the path (in plan) with min cost from the super-source
+    :param plan: dictionary of the min paths from the super-source 0 to all the destinations. {destination: path[]}
+    :param weights: dictionary containing the costs of each edge, keys as tuples of nodes e.g. (u, v)
+    :return: the destination (which is the key of the dictionary) of the path with min cost
+    """
+
+    min_path = None  # destination with currently min path
+    current_min_cost = INFINITY  # cost of the current min path
+    for key in plan:
+        cost = 0
+        path = plan[key]
+        for i, u in enumerate(path):
+            if i + 1 < len(path):  # bound checking
+                v = path[i + 1]  # arriving end ot the node, (u --> v)
+                cost += weights[(u, v)]
+        if cost < current_min_cost:
+            current_min_cost = cost
+            min_path = key
+
+    # min_path = destination which has the min path from the super-source. It's not a path!
+    # can be used as a key for plan.
+    # current_min_cost holds the cost of the path plan[min_path]
+    return min_path
+
+
 def get_flow(plan, adj_list):
     # [dest, [cammino ...]]
     # (adj_list[u][v])[1] = road_type
-
     """
     DOBBIAMO SCORRERE SOLO IL MINORE DEI CAMMINI
     min_flow = INFINITY
@@ -69,7 +123,12 @@ def get_flow(plan, adj_list):
 
 
 def find_paths(parents):
-    # trovo il cammino minimo per ogni destination
+    """Finds a path from the super-source to each one of the destinations and returns them.
+    Each path will be a min path for a destination because of the updates on parents performed by Dijkstra
+
+    :param parents: dictionary --> {node: parent}
+    :return: a dictionary with min paths for each destination {destination: path[]}
+    """
     dict_paths = {}
     for dest in destinations:
         path = [dest]
@@ -78,6 +137,7 @@ def find_paths(parents):
             path.insert(0, parents[u])
             u = parents[u]
         dict_paths[dest] = path
+
     return dict_paths
 
 
@@ -110,9 +170,7 @@ def dijkstra(V, adj_list):
 
     while not Q.is_empty():
         u = Q.extract_min()  # u = (distance, u) distanza per arrivare al nodo u
-        # print("ExtractMin", u)
         for v in adj_list[u[1]]:  # dict_distances = costo/distanza per arrivare a v
-            # print(weights[(u[1], v)])
             if dict_distances[u[1]] + weights[(u[1], v)] < dict_distances[v]:
                 # BEGIN RELAX
                 old_val = dict_distances[v]
@@ -121,8 +179,7 @@ def dijkstra(V, adj_list):
                 # END RELAX
                 Q.decrease_key(v, old_val, dict_distances[v])
 
-    # print("From Dijkstra:", Q)
-    return parents
+    return parents, weights # abbiamo bisogno di weights per calcolare velocemente il costo dei cammini
 
 
 def ccrp(V, adj_list, sources, destinations):
@@ -132,30 +189,39 @@ def ccrp(V, adj_list, sources, destinations):
         adj_list[0][s] = (0, -1)  # -1 = road_type di super
         # sorgente ovvero infinito
 
-    # print("ADJ_0", adj_list[0])
-    parents = dijkstra(V, adj_list)
+    parents, weights = dijkstra(V, adj_list)
     plan = find_paths(parents)  # mappa dei cammini minimi dalla source alla dest
-    flow = get_flow(plan, adj_list)
-
+    # flow = get_flow(plan, adj_list)
+    get_path_with_min_cost(plan, weights)
 
 
 def create_adj_list(V, tails, heads, length, road_type):
+    """Returns
+    :param V: list of all the nodes
+    :param tails: list all  the nodes having out-degree > 0
+    :param heads: list of all the nodes having in-degree > 0
+    :param length: length of the edges between the nodes
+    :param road_type: type of the road
+    :return:
+    """
     adj_list = {}
     for v in V:
         adj_list[v] = {}
 
     for i, t in enumerate(tails):
         h = heads[i]
-        if t != h:  # evita cappi
-            if h not in adj_list[t].keys():  # sono a posto devo aggiungere il nodo
+        if t != h:  # evito cappi
+            if h not in adj_list[t].keys():  # evito archi paralleli
                 adj_list[t][h] = [length[i], road_type[i]]
 
     return adj_list
 
 
 if __name__ == '__main__':
+    # Loading file
     data = np.loadtxt("./SFroad.txt")
 
+    # Setting starting variables
     tails = [int(i) for i in data[:, 0]]
     heads = [int(i) for i in data[:, 1]]
     length = data[:, 2]
@@ -166,6 +232,7 @@ if __name__ == '__main__':
     z = x.union(y)
     n = len(z)
 
+    # Processing
     adj_list = create_adj_list(z, tails, heads, length, road_type)
     lul = ccrp(z, adj_list, sources, destinations)
     print(lul)
