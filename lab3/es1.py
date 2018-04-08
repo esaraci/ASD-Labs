@@ -1,6 +1,6 @@
 # coding=utf-8
 import numpy as np
-import matplotlib.pyplot as plt
+
 import heapq
 
 
@@ -95,9 +95,9 @@ def get_path_with_min_cost(plan, weights):
             if i + 1 < len(path):  # bound checking
                 v = path[i + 1]  # arriving end ot the node, (u --> v)
                 cost += weights[(u, v)]
-        if cost < current_min_cost:
-            current_min_cost = cost
-            min_path = key
+                if cost < current_min_cost:
+                    current_min_cost = cost
+                    min_path = key
 
     # min_path = destination which has the min path from the super-source. It's not a path!
     # can be used as a key for plan.
@@ -105,21 +105,20 @@ def get_path_with_min_cost(plan, weights):
     return min_path
 
 
-def get_flow(plan, adj_list):
+def get_flow(plan, adj_list,dest):
     # [dest, [cammino ...]]
     # (adj_list[u][v])[1] = road_type
-    """
-    DOBBIAMO SCORRERE SOLO IL MINORE DEI CAMMINI
+    
+    #DOBBIAMO SCORRERE SOLO IL MINORE DEI CAMMINI
     min_flow = INFINITY
-    for dest in plan:  # per ogni destinazione
-        for i, v in enumerate(plan[dest]):
-            if v != dest: # bound checking
-                next = plan[dest][i+1]
-                if CAPACITY[adj_list[v][next][1]] < min_flow: # converto capacity, assumo sia ordinata
-                    min_flow = CAPACITY[adj_list[v][next][1]] # aggiorno min
+    for i, v in enumerate(plan[dest]):
+        if v != dest: # bound checking
+            next = plan[dest][i+1]
+            if CAPACITY[adj_list[v][next][1]] < min_flow: # converto capacity, assumo sia ordinata
+                min_flow = CAPACITY[adj_list[v][next][1]] # aggiorno min
 
     return min_flow
-    """
+    
 
 
 def find_paths(parents):
@@ -186,14 +185,57 @@ def ccrp(V, adj_list, sources, destinations):
     # aggiungo super sorgente con costo 0 e capacità infinity
     adj_list[0] = {}
     for s in sources:
-        adj_list[0][s] = (0, -1)  # -1 = road_type di super
+        adj_list[0][s] = [0, -1]  # -1 = road_type di super
         # sorgente ovvero infinito
+
+    #creo dizionario per salvare le capacità, ci serve eprchè una volta a zero togliamo l'arco dal dizionario
+    capacity={}
+    for i in adj_list.keys():
+        capacity[i]={}
+        for j in adj_list[i].keys():
+            capacity[i][j]= CAPACITY[adj_list[i][j][1]]
 
     parents, weights = dijkstra(V, adj_list)
     plan = find_paths(parents)  # mappa dei cammini minimi dalla source alla dest
-    # flow = get_flow(plan, adj_list)
-    get_path_with_min_cost(plan, weights)
 
+    min_path = get_path_with_min_cost(plan, weights)
+
+    b=True
+    if min_path == None:
+        b = False
+
+    planCCRP=[]
+    
+    while b:
+        print("Sto lavorando")
+        planCCRP.append(plan[min_path])
+        #dest=destinazione del cammino minimo, uso la lunghezza della lista per prendere l'ultimo elemento
+        k=len(plan[min_path])
+        dest=plan[min_path][k-1]
+
+        #get_flow torna la capacità (minima) di un cammino
+        flow = get_flow(plan, adj_list,dest)
+
+        for i in range(len(plan[min_path])-1): #-1 per non uscire dal range 
+        #(stiamo considerando archi, l'ultimo elemento non ha un arco uscente)
+           
+            #arco da vi a vi1
+            vi=plan[min_path][i]
+            vi1=plan[min_path][i+1]
+            capacity[vi][vi1]-=flow
+            if capacity[vi][vi1]<=0: #minore perchè potrebbe essere sotto 0 dopo l'aggiornamento
+                del adj_list[vi][vi1]
+
+        #ricalcolo i cammini minimi una volta tolto l'arco
+        parents, weights = dijkstra(V, adj_list)
+        plan = find_paths(parents)
+        min_path = get_path_with_min_cost(plan, weights)
+
+        #se il cammino minimo non esiste esco dal while
+        if min_path == None:
+            b = False
+
+    return planCCRP
 
 def create_adj_list(V, tails, heads, length, road_type):
     """Returns
@@ -235,4 +277,5 @@ if __name__ == '__main__':
     # Processing
     adj_list = create_adj_list(z, tails, heads, length, road_type)
     lul = ccrp(z, adj_list, sources, destinations)
-    print(lul)
+    for i in range(len(lul)):
+        print("cammino minimo num:",i,":",lul[i]) 
