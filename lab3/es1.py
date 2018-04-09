@@ -1,6 +1,6 @@
 # coding=utf-8
 import numpy as np
-
+import matplotlib.pyplot as plt
 import heapq
 
 # CONSTS
@@ -105,7 +105,7 @@ def get_path_with_min_cost(plan, weights):
     # if min_path is not None:
         # print(min_path, plan[min_path])
         # print(current_min_cost)
-    return min_path
+    return min_path, current_min_cost
 
 
 def get_flow(plan, dest, capacity):
@@ -200,7 +200,7 @@ def ccrp(V, adj_list, sources, destinations):
     parents, weights = dijkstra(V, adj_list)
     plan = find_paths(parents)  # mappa dei cammini minimi dalla source alla dest
 
-    min_path = get_path_with_min_cost(plan, weights)  # destinazione con path costo minimo
+    min_path, cost = get_path_with_min_cost(plan, weights)  # destinazione con path costo minimo
 
     b = True
     if min_path is None:
@@ -208,6 +208,7 @@ def ccrp(V, adj_list, sources, destinations):
 
     planCCRP = []
     flows = []
+    costs = [cost]
 
     while b:
         # print("Sto lavorando")
@@ -216,7 +217,10 @@ def ccrp(V, adj_list, sources, destinations):
 
         # get_flow torna la capacità (minima) di un cammino
         flow = get_flow(plan, min_path, capacity)
-        flows.append(flow)
+        if len(flows) == 0:
+            flows.append(flow)
+        else:
+            flows.append(flow + flows[-1])  # sommo flows al precedente which is the last one
 
         for i in range(len(plan[min_path]) - 1):  # -1 per non uscire dal range
             # (stiamo considerando archi, l'ultimo elemento non ha un arco uscente)
@@ -231,15 +235,16 @@ def ccrp(V, adj_list, sources, destinations):
         # ricalcolo i cammini minimi una volta tolto l'arco
         parents, weights = dijkstra(V, adj_list)
         plan = find_paths(parents)
-        min_path = get_path_with_min_cost(plan, weights)
+        min_path, cost = get_path_with_min_cost(plan, weights)
 
         # se il cammino minimo non esiste esco dal while
         if min_path is None:
             # print("PRINTO PLAN:", plan)
             b = False
+        else:
+            costs.append(cost)
 
-    # print(sum(flows))
-    return planCCRP
+    return planCCRP, flows, costs
 
 
 def create_adj_list(V, tails, heads, length, road_type):
@@ -258,7 +263,7 @@ def create_adj_list(V, tails, heads, length, road_type):
     for i, t in enumerate(tails):
         h = heads[i]
         if t != h:  # evito cappi
-            if h not in adj_list[t].keys():  # evito archi paralleli
+            if h not in adj_list[t].keys():  # evito archi paralleli (eugen.io)
                 adj_list[t][h] = [length[i], road_type[i]]
 
     return adj_list
@@ -280,6 +285,19 @@ if __name__ == '__main__':
     n = len(z)
 
     # Processing
-    adj_list = create_adj_list(z, tails, heads, length, road_type)
-    lul = ccrp(z, adj_list, sources, destinations)
-    print(len(lul))
+    adj_list = create_adj_list(z, tails, heads, length, road_type)  # slia
+    lul, flows, costs = ccrp(z, adj_list, sources, destinations)  # fndelnin
+    # print(len(lul))
+
+    # print(costs, flows)
+    x_range = np.arange(1, len(lul) + 1)
+    plt.plot(x_range, flows, label="Capacità")
+    plt.plot(x_range, costs, label="Tempo (s)")
+    plt.title("CCRP")
+    plt.xlabel("Numero di cammini")
+    plt.ylabel("Capacità")
+    plt.legend()
+    plt.xticks(np.arange(min(x_range), max(x_range) + 1, 1))
+    plt.savefig("lab3-grafico.png")
+    plt.grid()
+    plt.show()
