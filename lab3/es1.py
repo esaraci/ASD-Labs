@@ -2,6 +2,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import heapq
+import sys
+
+# for decoding accented letters
+# reload(sys) NON FUNZIONA
+# sys.setdefaultencoding('utf8')
 
 # CONSTS
 INFINITY = float('inf')
@@ -211,7 +216,7 @@ def ccrp(V, adj_list, sources, destinations):
     costs = [cost]
 
     while b:
-        # print("Sto lavorando")
+        print("Sto lavorando")
         planCCRP.append(plan[min_path])
         # dest=destinazione del cammino minimo, uso la lunghezza della lista per prendere l'ultimo elemento
 
@@ -291,6 +296,36 @@ if __name__ == '__main__':
 
     # print(costs, flows)
     x_range = np.arange(1, len(lul) + 1)
+
+    # creiamo il primo subplot
+    # plt.subplot(2, 1, 1)  # number_of_rows, num_of column, position, first position
+    plt.plot(x_range, flows, label="Capacità")
+    plt.xlabel("Numero di cammini")
+    plt.ylabel("Capacita'")
+    # plt.legend()
+    plt.title("CCRP - Capacita' massima", y=1.08)
+    plt.xticks(np.arange(min(x_range), max(x_range) + 1, 1))
+    plt.grid()
+
+    plt.savefig("lab3-grafico-Capacita.png")
+
+    plt.clf()  # pulisco il grafico
+
+    # creiamo il secondo subplot (in verticale)
+    # plt.subplot(2, 1, 2)  # seconda posizione
+    plt.plot(x_range, costs, label="Tempo (s)", color='orange')
+    plt.xlabel("Numero di cammini")
+    plt.ylabel("Tempo (s)")
+    plt.title("CCRP - Tempo impiegato", y=1.08)
+    # plt.legend()
+    plt.xticks(np.arange(min(x_range), max(x_range) + 1, 1))
+    plt.grid()
+
+    plt.savefig("lab3-grafico-Tempo.png")
+
+    # plt.show()
+
+    '''
     plt.plot(x_range, flows, label="Capacità")
     plt.plot(x_range, costs, label="Tempo (s)")
     plt.title("CCRP")
@@ -301,3 +336,4 @@ if __name__ == '__main__':
     plt.savefig("lab3-grafico.png")
     plt.grid()
     plt.show()
+    '''
