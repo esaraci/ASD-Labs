@@ -298,32 +298,34 @@ if __name__ == '__main__':
     x_range = np.arange(1, len(lul) + 1)
 
     # creiamo il primo subplot
-    # plt.subplot(2, 1, 1)  # number_of_rows, num_of column, position, first position
+    plt.subplot(2, 1, 1)  # number_of_rows, num_of column, position, first position
     plt.plot(x_range, flows, label="Capacità")
     plt.xlabel("Numero di cammini")
     plt.ylabel("Capacita'")
-    # plt.legend()
-    plt.title("CCRP - Capacita' massima", y=1.08)
+    plt.legend()
+    plt.title("CCRP - Capacità massima", y=1.08)
     plt.xticks(np.arange(min(x_range), max(x_range) + 1, 1))
     plt.grid()
 
     plt.savefig("lab3-grafico-Capacita.png")
 
-    plt.clf()  # pulisco il grafico
 
     # creiamo il secondo subplot (in verticale)
-    # plt.subplot(2, 1, 2)  # seconda posizione
+    plt.subplot(2, 1, 2)  # seconda posizione
     plt.plot(x_range, costs, label="Tempo (s)", color='orange')
     plt.xlabel("Numero di cammini")
     plt.ylabel("Tempo (s)")
     plt.title("CCRP - Tempo impiegato", y=1.08)
-    # plt.legend()
+    plt.legend()
     plt.xticks(np.arange(min(x_range), max(x_range) + 1, 1))
+    plt.yticks(np.arange(100, 800, 100))
     plt.grid()
 
-    plt.savefig("lab3-grafico-Tempo.png")
+    plt.subplots_adjust(hspace=0.65)
 
-    # plt.show()
+    plt.savefig("lab3-grafico-totale.png")
+
+    plt.show()
 
     '''
     plt.plot(x_range, flows, label="Capacità")
