@@ -86,7 +86,6 @@ if __name__ == '__main__':
     plt.plot(x_range, flows, label="Capacità")
     plt.xlabel("Numero di cammini")
     plt.ylabel("Capacità")
-    # plt.legend()
     plt.title("CCRP - Capacità massima", y=1.08)
     plt.xticks(np.arange(min(x_range), max(x_range) + 1, 1))
     plt.grid()
