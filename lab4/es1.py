@@ -31,6 +31,7 @@ class Graph:
         except KeyError as e:
             return None
 
+
     def set_distances(self, key, value):
         self.distances[key] = value
 
@@ -58,7 +59,8 @@ def held_karp(graph, v, S):
     """
     # Caso base
     if len(S) == 1:
-        return graph.get_adj_matrix(v, 0)  # S contiene un unico elemento che è v
+        # print("Caso base:", v)
+        return graph.get_adj_matrix(v, 0)  # S contiene un unico elemento che è v, stiamo andando da 0 --> v
     elif graph.get_distances((v, S)) is not None:
         return graph.get_distances((v, S))
     else:
@@ -67,8 +69,9 @@ def held_karp(graph, v, S):
         S1 = tuple([u for u in S if u != v])
         for u in S1:
             dist = held_karp(graph, u, S1)  # chiamata ricorsiva
-            print("Arco attuale:", graph.get_adj_matrix(u, v))
-            print("Confronto:", dist + graph.get_adj_matrix(u, v), mindist)
+            # print("Dist:", dist)
+            # print("Arco attuale:", graph.get_adj_matrix(u, v))
+            # print("Confronto:", dist + graph.get_adj_matrix(u, v), mindist)
             if dist + graph.get_adj_matrix(u, v) < mindist:  # aggiorno nel caso sia una quantità minore
                 mindist = dist + graph.get_adj_matrix(u, v)
                 minprec = u
@@ -112,5 +115,5 @@ if __name__ == "__main__":
 
     graph = Graph(dataset)
 
-    print("Matrice: \n", graph.get_adj_matrix())
-    print(held_karp(graph, 2, (1, 2)))
+    # print("Matrice: \n", graph.get_adj_matrix())
+    held_karp(graph, 0, (0,1,2,3,4,5,6,7,8,9,10,11,12,13))
