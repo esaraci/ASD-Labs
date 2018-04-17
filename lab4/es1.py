@@ -9,16 +9,72 @@ INFINITY = float('inf')
 # x[0][lat][long]
 
 
-def held_karp(adj_matrix, v, S):
+# una bella classe per eugen da spostare in un file a parte
+class Graph:
+    def __init__(self, dataset):
+        n = len(dataset)  # inizializzo già qua la matrice delle adiacenze
+        self.adj_matrix = np.zeros((n, n), dtype=int)
+        self.create_adj_matrix(dataset)
+        self.distances = {}  # chiave del dizionario tupla (v, S)
+        self.parents = {}
+
+    def create_adj_matrix(self, dataset):  # format, passare il formato geo o euc
+        for i in dataset:
+            for j in dataset:
+                if i[0] != j[0]:
+                    self.adj_matrix[int(i[0])-1][int(j[0])-1] = compute_distance(i, j)  # None if i == j
+
+    # la chiave è una tupla
+    def get_distances(self, key):
+        try:
+            return self.distances[key]
+        except KeyError as e:
+            return None
+
+    def set_distances(self, key, value):
+        self.distances[key] = value
+
+    # anche per i parents la chiave è una tupla
+    def get_parents(self, key):
+        return self.parents[key]
+
+    def set_parents(self, key, value):
+        self.parents[key] = value
+
+    def get_adj_matrix(self, u=None, v=None):
+        if u is None or v is None:
+            return self.adj_matrix
+        else:
+            return self.adj_matrix[u, v]
+
+
+def held_karp(graph, v, S):
     """
 
-    :param adj_matrix: weights
+    :param graph: Graph
     :param v: target node
     :param S: nodi poer cui dobbiamo passare
     :return:
     """
-    distances = {}
-    parents = {}
+    # Caso base
+    if len(S) == 1:
+        return graph.get_adj_matrix(v, 0)  # S contiene un unico elemento che è v
+    elif graph.get_distances((v, S)) is not None:
+        return graph.get_distances((v, S))
+    else:
+        mindist = INFINITY
+        minprec = None
+        S1 = tuple([u for u in S if u != v])
+        for u in S1:
+            dist = held_karp(graph, u, S1)  # chiamata ricorsiva
+            print("Arco attuale:", graph.get_adj_matrix(u, v))
+            print("Confronto:", dist + graph.get_adj_matrix(u, v), mindist)
+            if dist + graph.get_adj_matrix(u, v) < mindist:  # aggiorno nel caso sia una quantità minore
+                mindist = dist + graph.get_adj_matrix(u, v)
+                minprec = u
+        graph.set_distances((v, S), mindist)
+        graph.set_parents((v, S), minprec)
+        return mindist
 
 
 def convert_to_rads(val):
@@ -41,20 +97,10 @@ def compute_distance(i, j):
 
     q1 = cos(long_i - long_j)
     q2 = cos(lat_i - lat_j)
-    q3 = cos(lat_i + lat_j);
+    q3 = cos(lat_i + lat_j)
     dij = int(RRR * acos(0.5 * ((1.0 + q1) * q2 - (1.0 - q1) * q3)) + 1.0)
 
     return dij
-
-
-def create_adj_matrix(dataset): # format, passare il formato geo o euc
-    n = len(dataset)
-    matrix = np.zeros((n, n), dtype=int)
-    for i in dataset:
-        for j in dataset:
-            if i[0] != j[0]:
-                matrix[int(i[0])-1][int(j[0])-1] = compute_distance(i, j)  # None if i == j
-    return matrix
 
 
 if __name__ == "__main__":
@@ -62,5 +108,9 @@ if __name__ == "__main__":
 
     dataset = np.loadtxt("datasets/burma14.tsp", skiprows=8, comments="EOF")
     # create_adj_matrix(n)
-    adj_matrix = create_adj_matrix(dataset)
-    held_karp(adj_matrix)
+    # adj_matrix = create_adj_matrix(dataset)
+
+    graph = Graph(dataset)
+
+    print("Matrice: \n", graph.get_adj_matrix())
+    print(held_karp(graph, 2, (1, 2)))
