@@ -12,8 +12,8 @@ INFINITY = float('inf')
 
 class Graph:
     def __init__(self, dataset):
-        n = len(dataset)  # inizializzo già qua la matrice delle adiacenze
-        self.adj_matrix = np.zeros((n, n), dtype=int)
+        self.n = len(dataset)  # inizializzo già qua la matrice delle adiacenze
+        self.adj_matrix = np.zeros((self.n, self.n), dtype=int)
         self.create_adj_matrix(dataset)
         self.distances = {}  # chiave del dizionario tupla (v, S)
         self.parents = {}
@@ -46,6 +46,9 @@ class Graph:
             return self.adj_matrix
         else:
             return self.adj_matrix[u, v]
+
+    def get_len(self):
+        return self.n
 
 
 def convert_to_rads(val):

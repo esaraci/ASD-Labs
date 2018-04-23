@@ -9,12 +9,26 @@ INFINITY = float('inf')
 # x[0][lat][long]
 
 
+def get_cycle_cost(G, C):
+
+    adj_matrix = G.get_adj_matrix()
+    cost = 0
+    for i in range(len(C)):
+        j = i + 1
+        if j == len(C):
+            # se sono out of bound con j, torno a 0 e chiudo il ciclo
+            j = 0
+        cost += adj_matrix[C[i]][C[j]]
+
+    return cost
+
+
 def random_insertion(G):
 
-    # INITIALIZATION
+    # BEGIN INITIALIZATION
     C = [0]
     adj_matrix = G.get_adj_matrix()
-    not_extracted = set((np.arange(len(adj_matrix))))
+    not_extracted = set((np.arange(G.get_len())))
     not_extracted.remove(0)
 
     min_ = INFINITY
@@ -30,11 +44,11 @@ def random_insertion(G):
     #  Estraggo terzo nodo a caso, esistono solo 2 possibili archi che lo integrano nel circuito
     extracted = random.sample(not_extracted, 1)[0]  # random.sample ritorna una lista, prendo il primo ed unico elemento
     C.append(extracted)
-    print(type(int(extracted)))
     not_extracted.remove(extracted)
 
     # END INITIALIZATION
 
+    # BEGIN SELECTION
     while len(not_extracted) is not 0:
         extracted = random.sample(not_extracted, 1)[0]
         not_extracted.remove(extracted)
@@ -56,6 +70,9 @@ def random_insertion(G):
             C.append(extracted)
         else:
             C.insert(edges[1],  extracted)
+
+    print(C)
+    print(get_cycle_cost(G, C))
 
 
 def held_karp(graph, v, S):
@@ -101,4 +118,4 @@ if __name__ == "__main__":
     graph = Graph(dataset)
     # print("Matrice: \n", graph.get_adj_matrix())
     held_karp(graph, 0, lul)
-    random_insertion(graph)
+    # random_insertion(graph)
