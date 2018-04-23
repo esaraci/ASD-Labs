@@ -72,3 +72,7 @@ def compute_distance(i, j):
     dij = int(RRR * acos(0.5 * ((1.0 + q1) * q2 - (1.0 - q1) * q3)) + 1.0)
 
     return dij
+
+
+if __name__ == '__main__':
+    print("you should not be executing me")

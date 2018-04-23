@@ -28,20 +28,20 @@ def random_insertion(G):
     not_extracted.remove(node_idx)
 
     #  Estraggo terzo nodo a caso, esistono solo 2 possibili archi che lo integrano nel circuito
-    extracted = random.choice(not_extracted)
+    extracted = random.sample(not_extracted, 1)[0]  # random.sample ritorna una lista, prendo il primo ed unico elemento
     C.append(extracted)
+    print(type(int(extracted)))
     not_extracted.remove(extracted)
 
     # END INITIALIZATION
 
     while len(not_extracted) is not 0:
-        extracted = random.choice(not_extracted)
+        extracted = random.sample(not_extracted, 1)[0]
         not_extracted.remove(extracted)
 
         min_ = INFINITY
         edges = None
         for i, node in enumerate(C):
-
             j = i + 1
             if j == len(C):
                 # se sono out of bound con j, torno a 0 e chiudo il ciclo
@@ -56,9 +56,6 @@ def random_insertion(G):
             C.append(extracted)
         else:
             C.insert(edges[1],  extracted)
-
-
-        C.append(extracted)
 
 
 def held_karp(graph, v, S):
