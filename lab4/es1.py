@@ -1,6 +1,6 @@
 import numpy as np
-from math import cos, sin, acos
-
+from graph import *
+import random
 
 # global
 PI = 3.141592
@@ -9,44 +9,56 @@ INFINITY = float('inf')
 # x[0][lat][long]
 
 
-# una bella classe per eugen da spostare in un file a parte
-class Graph:
-    def __init__(self, dataset):
-        n = len(dataset)  # inizializzo già qua la matrice delle adiacenze
-        self.adj_matrix = np.zeros((n, n), dtype=int)
-        self.create_adj_matrix(dataset)
-        self.distances = {}  # chiave del dizionario tupla (v, S)
-        self.parents = {}
+def random_insertion(G):
 
-    def create_adj_matrix(self, dataset):  # format, passare il formato geo o euc
-        for i in dataset:
-            for j in dataset:
-                if i[0] != j[0]:
-                    self.adj_matrix[int(i[0])-1][int(j[0])-1] = compute_distance(i, j)  # None if i == j
+    # INITIALIZATION
+    C = [0]
+    adj_matrix = G.get_adj_matrix()
+    not_extracted = set((np.arange(len(adj_matrix))))
+    not_extracted.remove(0)
 
-    # la chiave è una tupla
-    def get_distances(self, key):
-        try:
-            return self.distances[key]
-        except KeyError as e:
-            return None
+    min_ = INFINITY
+    node_idx = None
+    for i, val in enumerate(adj_matrix[0, 1:]):
+        if val < min_:
+            min_ = val
+            node_idx = i
 
+    C.append(node_idx)
+    not_extracted.remove(node_idx)
 
-    def set_distances(self, key, value):
-        self.distances[key] = value
+    #  Estraggo terzo nodo a caso, esistono solo 2 possibili archi che lo integrano nel circuito
+    extracted = random.choice(not_extracted)
+    C.append(extracted)
+    not_extracted.remove(extracted)
 
-    # anche per i parents la chiave è una tupla
-    def get_parents(self, key):
-        return self.parents[key]
+    # END INITIALIZATION
 
-    def set_parents(self, key, value):
-        self.parents[key] = value
+    while len(not_extracted) is not 0:
+        extracted = random.choice(not_extracted)
+        not_extracted.remove(extracted)
 
-    def get_adj_matrix(self, u=None, v=None):
-        if u is None or v is None:
-            return self.adj_matrix
+        min_ = INFINITY
+        edges = None
+        for i, node in enumerate(C):
+
+            j = i + 1
+            if j == len(C):
+                # se sono out of bound con j, torno a 0 e chiudo il ciclo
+                j = 0
+
+            if adj_matrix[j][extracted] + adj_matrix[i][extracted] - adj_matrix[i][j] < min_:
+                min_ = adj_matrix[j][extracted] + adj_matrix[i][extracted] - adj_matrix[i][j]
+                edges = (i, j)
+
+        # collego l'ultimo nodo al primo
+        if edges[1] == 0:
+            C.append(extracted)
         else:
-            return self.adj_matrix[u, v]
+            C.insert(edges[1],  extracted)
+
+
+        C.append(extracted)
 
 
 def held_karp(graph, v, S):
@@ -80,40 +92,16 @@ def held_karp(graph, v, S):
         return mindist
 
 
-def convert_to_rads(val):
-    deg = int(val)
-    min_ = val - deg
-    rad = PI * (deg + 5.0 * min_/ 3.0) / 180.0
-
-    return rad
-
-
-def compute_distance(i, j):
-    if i[0] == j[0]:
-        return -1
-
-    lat_i = convert_to_rads(i[1]) # u[1] = latitudine del nodo u ==> riga u
-    long_i = convert_to_rads(i[2])
-
-    lat_j = convert_to_rads(j[1])
-    long_j = convert_to_rads(j[2])
-
-    q1 = cos(long_i - long_j)
-    q2 = cos(lat_i - lat_j)
-    q3 = cos(lat_i + lat_j)
-    dij = int(RRR * acos(0.5 * ((1.0 + q1) * q2 - (1.0 - q1) * q3)) + 1.0)
-
-    return dij
-
-
 if __name__ == "__main__":
     # print("min(len(lul))")
 
     dataset = np.loadtxt("datasets/burma14.tsp", skiprows=8, comments="EOF")
+    l = len(dataset)
+    lul = tuple(np.arange(l))
     # create_adj_matrix(n)
     # adj_matrix = create_adj_matrix(dataset)
 
     graph = Graph(dataset)
-
     # print("Matrice: \n", graph.get_adj_matrix())
-    held_karp(graph, 0, (0,1,2,3,4,5,6,7,8,9,10,11,12,13))
+    held_karp(graph, 0, lul)
+    random_insertion(graph)
