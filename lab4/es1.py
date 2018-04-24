@@ -1,5 +1,6 @@
 import numpy as np
 from graph import *
+from PriorityQueue import PriorityQueue
 import random
 
 # global
@@ -9,8 +10,37 @@ INFINITY = float('inf')
 # x[0][lat][long]
 
 
-def get_cycle_cost(G, C):
 
+def prim(G, r=0):
+
+    keys = {}
+    parents = {}
+    adj_matrix = G.get_adj_matrix()
+
+    for i in range(G.get_len()):
+        keys[i] = INFINITY
+        parents[i] = None
+
+    keys[r] = 0
+    Q = PriorityQueue(list(np.arange(G.get_len())))
+
+    while not Q.is_empty():
+        u = Q.extract_min()
+
+        for v in range(G.get_len()):
+            if v != u and v in Q.heap and adj_matrix[u][v] < keys[v]:
+                old_val = keys[v]
+                keys[v] = adj_matrix[u][v]
+                parents[v] = u
+                print("V", v)
+                print("PARENTE[V]", parents[v])
+                print(Q.heap)
+                Q.decrease_key(v, old_val, keys[v])
+
+    return [(v, parents[v]) for v in range(G.get_len()) if v != r]
+
+
+def get_cycle_cost(G, C):
     adj_matrix = G.get_adj_matrix()
     cost = 0
     for i in range(len(C)):
@@ -135,4 +165,5 @@ if __name__ == "__main__":
     # print("Matrice: \n", graph.get_adj_matrix())
     # print(held_karp(graph, 0, lul))
     # print(random_insertion(graph))
+    print(prim(graph))
 
