@@ -41,7 +41,7 @@ def random_insertion(G):
     C.append(node_idx)
     not_extracted.remove(node_idx)
 
-    #  Estraggo terzo nodo a caso, esistono solo 2 possibili archi che lo integrano nel circuito
+    # Estraggo terzo nodo a caso, esistono solo 2 possibili archi che lo integrano nel circuito
     extracted = random.sample(not_extracted, 1)[0]  # random.sample ritorna una lista, prendo il primo ed unico elemento
     C.append(extracted)
     not_extracted.remove(extracted)
@@ -71,8 +71,7 @@ def random_insertion(G):
         else:
             C.insert(edges[1],  extracted)
 
-    print(C)
-    print(get_cycle_cost(G, C))
+    return get_cycle_cost(G, C)
 
 
 def held_karp(graph, v, S):
@@ -90,32 +89,50 @@ def held_karp(graph, v, S):
     elif graph.get_distances((v, S)) is not None:
         return graph.get_distances((v, S))
     else:
-        mindist = INFINITY
-        minprec = None
+        min_dist = INFINITY
+        min_prec = None
         S1 = tuple([u for u in S if u != v])
         for u in S1:
             dist = held_karp(graph, u, S1)  # chiamata ricorsiva
             # print("Dist:", dist)
             # print("Arco attuale:", graph.get_adj_matrix(u, v))
             # print("Confronto:", dist + graph.get_adj_matrix(u, v), mindist)
-            if dist + graph.get_adj_matrix(u, v) < mindist:  # aggiorno nel caso sia una quantità minore
-                mindist = dist + graph.get_adj_matrix(u, v)
-                minprec = u
-        graph.set_distances((v, S), mindist)
-        graph.set_parents((v, S), minprec)
-        return mindist
+            if dist + graph.get_adj_matrix(u, v) < min_dist:  # aggiorno nel caso sia una quantità minore
+                min_dist = dist + graph.get_adj_matrix(u, v)
+                min_prec = u
+        graph.set_distances((v, S), min_dist)
+        graph.set_parents((v, S), min_prec)
+        return min_dist
 
 
 if __name__ == "__main__":
     # print("min(len(lul))")
 
-    dataset = np.loadtxt("datasets/burma14.tsp", skiprows=8, comments="EOF")
+    geo = False
+    c = 1
+    fname = "datasets/ulysses16.tsp"
+    with open(fname) as f:
+        line = f.readline()
+        while line != "NODE_COORD_SECTION\n":
+
+            if "EDGE_WEIGHT_TYPE" in line:
+                if line.split(":")[1] == " GEO\n":
+                    geo = True
+
+            line = f.readline()
+            c += 1
+
+    dataset = np.loadtxt(fname, skiprows=c, comments=["EOF"])
+
+    # print(dataset[0].split(":")[1])
+    # print(dataset)
     l = len(dataset)
     lul = tuple(np.arange(l))
     # create_adj_matrix(n)
     # adj_matrix = create_adj_matrix(dataset)
 
-    graph = Graph(dataset)
+    graph = Graph(dataset, geo)
     # print("Matrice: \n", graph.get_adj_matrix())
-    held_karp(graph, 0, lul)
-    # random_insertion(graph)
+    # print(held_karp(graph, 0, lul))
+    # print(random_insertion(graph))
+
