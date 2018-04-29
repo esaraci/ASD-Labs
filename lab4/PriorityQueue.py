@@ -49,3 +49,14 @@ class PriorityQueue:
         self.heap[i][0] = new_val
         self.bubble_up(i)
         return True
+
+    def is_there_element(self, x):
+        """
+        Looking for an element in the heap. It returns True if the value is found, False otherwise
+        :param x:
+        :return:
+        """
+        for v in self.heap:
+            if x == v[1]:
+                return True
+        return False

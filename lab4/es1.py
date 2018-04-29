@@ -10,7 +10,6 @@ INFINITY = float('inf')
 # x[0][lat][long]
 
 
-
 def prim(G, r=0):
 
     keys = {}
@@ -22,11 +21,30 @@ def prim(G, r=0):
         parents[i] = None
 
     keys[r] = 0
-    Q = PriorityQueue(list(np.arange(G.get_len())))
+
+    array = [[keys[v], v] for v in range(G.get_len())]
+    Q = PriorityQueue(array)
 
     while not Q.is_empty():
-        u = Q.extract_min()
+        u = Q.extract_min()  # u = array di 2 valori [chiave, nodo]
 
+        print("MINIMO", u)
+
+        # print("ADJ", adj_matrix[u[1]])
+
+        for v in range(G.get_len()):  # per ogni nodo nella lista delle adiacenze di u
+            print("Confronto", adj_matrix[u[1]][v])
+            print("Valore corrente", keys[v])
+            # se u è in Q e il valore del nodo è minore di quello della chiave corrente e non è un cappio (elemento
+            # della diagonale)
+            if Q.is_there_element(v) and adj_matrix[u[1]][v] < keys[v] and u != v:
+                old_val = keys[v]  # salvo il vecchio valore (serve per decrease_key)
+                keys[v] = adj_matrix[u[1]][v]  # aggiorno il nuovo valore
+                parents[v] = u  # modifico il genitore del nodo
+                Q.decrease_key(v, old_val, keys[v])  # decrem valore nell'albero per poi estrarre il minimo al prox giro
+
+        '''
+        # codice di prima lasciato commentato
         for v in range(G.get_len()):
             if v != u and v in Q.heap and adj_matrix[u][v] < keys[v]:
                 old_val = keys[v]
@@ -36,6 +54,7 @@ def prim(G, r=0):
                 print("PARENTE[V]", parents[v])
                 print(Q.heap)
                 Q.decrease_key(v, old_val, keys[v])
+        '''
 
     return [(v, parents[v]) for v in range(G.get_len()) if v != r]
 
