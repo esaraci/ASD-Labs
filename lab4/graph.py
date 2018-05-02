@@ -17,6 +17,7 @@ class Graph:
         self.create_adj_matrix(dataset, geo)
         self.distances = {}  # chiave del dizionario tupla (v, S)
         self.parents = {}
+        self.color = {}
 
     def create_adj_matrix(self, dataset, geo):  # format, passare il formato geo o euc
         for i in dataset:
