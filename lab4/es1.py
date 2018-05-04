@@ -3,6 +3,8 @@ from graph import *
 from PriorityQueue import PriorityQueue
 import random
 from enum import Enum
+import threading
+from held_karp_thread import HeldKarpThread
 
 # global
 PI = 3.141592
@@ -134,43 +136,12 @@ def random_insertion(G):
     return get_cycle_cost(G, C)
 
 
-def held_karp(graph, v, S):
-    """
-
-    :param graph: Graph
-    :param v: target node
-    :param S: nodi poer cui dobbiamo passare
-    :return:
-    """
-    # Caso base
-    if len(S) == 1:
-        # print("Caso base:", v)
-        return graph.get_adj_matrix(v, 0)  # S contiene un unico elemento che è v, stiamo andando da 0 --> v
-    elif graph.get_distances((v, S)) is not None:
-        return graph.get_distances((v, S))
-    else:
-        min_dist = INFINITY
-        min_prec = None
-        S1 = tuple([u for u in S if u != v])
-        for u in S1:
-            dist = held_karp(graph, u, S1)  # chiamata ricorsiva
-            # print("Dist:", dist)
-            # print("Arco attuale:", graph.get_adj_matrix(u, v))
-            # print("Confronto:", dist + graph.get_adj_matrix(u, v), mindist)
-            if dist + graph.get_adj_matrix(u, v) < min_dist:  # aggiorno nel caso sia una quantità minore
-                min_dist = dist + graph.get_adj_matrix(u, v)
-                min_prec = u
-        graph.set_distances((v, S), min_dist)
-        graph.set_parents((v, S), min_prec)
-        return min_dist
-
-
 if __name__ == "__main__":
     # print("min(len(lul))")
 
     geo = False
     c = 1
-    fname = "datasets/burma14.tsp"
+    fname = "datasets/pcb442.tsp"
     with open(fname) as f:
         line = f.readline()
         while line != "NODE_COORD_SECTION\n":
@@ -189,14 +160,21 @@ if __name__ == "__main__":
 
     graph = Graph(dataset, geo)
 
-    T = prim(graph)
-    color = {}
-    for i in T:
-        color[i[0]] = Color.WHITE
-    D = DFS_Visited(T, 0, [], color)
+    # T = prim(graph)
+    # color = {}
+    # for i in T:
+    #     color[i[0]] = Color.WHITE
+    # D = DFS_Visited(T, 0, [], color)
 
-    print("PRIM:", get_cycle_cost(graph, D))
-    print("HELD_KARP:", held_karp(graph, 0, lul))
-    print("RANDOM:", random_insertion(graph))
+    # print("PRIM:", get_cycle_cost(graph, D))
+    # print("HELD_KARP:", held_karp(graph, 0, lul))
+    # print("RANDOM:", random_insertion(graph))
+
+    griffo = HeldKarpThread(graph, 0, lul)
+    griffo.start()
+
+    # x = threading.Thread(target=held_karp, args=(graph, 0, lul)).start()
+
+
 
 
