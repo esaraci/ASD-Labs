@@ -21,8 +21,7 @@ class HeldKarpThread(threading.Thread):
     def run(self):
         self.timestamp = int(time.time())
         tmp = self.held_karp(self.graph, self.v, self.S)
-        if tmp == INFINITY:
-            print("Passati 2 minuti")
+        print("Passati {} secondi".format(int(time.time()) - self.timestamp))
         # print("distances", self.graph.distances)
         print("PART SOL:", self.partial_solution)
         print("MIN_DIST:", self.min_dist)
@@ -34,34 +33,34 @@ class HeldKarpThread(threading.Thread):
         :param S: nodi poer cui dobbiamo passare
         :return:
         """
-        if int(time.time()) - self.timestamp <= 60*2:
-            # Caso base
-            if len(S) == 1:
-                # print("Caso base:", v)
-                # return INFINITY
-                return graph.get_adj_matrix(v, 0)  # S contiene un unico elemento che è v, stiamo andando da 0 --> v
-            elif graph.get_distances((v, S)) is not None:
-                return graph.get_distances((v, S))
-            else:
-                min_dist = INFINITY
-                min_prec = None
-                S1 = tuple([u for u in S if u != v])
-                time_passed = False
-                for u in S1:
-                    dist = self.held_karp(graph, u, S1)  # chiamata ricorsiva
-                    if dist == INFINITY:
-                        time_passed = True
-                        break
+        #if int(time.time()) - self.timestamp <= 120:
+        # Caso base
+        if len(S) == 1:
+            # print("Caso base:", v)
+            # return INFINITY
+            return graph.get_adj_matrix(v, 0)  # S contiene un unico elemento che è v, stiamo andando da 0 --> v
+        elif graph.get_distances((v, S)) is not None:
+            return graph.get_distances((v, S))
+        else:
+            min_dist = INFINITY
+            min_prec = None
+            S1 = tuple([u for u in S if u != v])
+            time_passed = False
+            for u in S1:
+                dist = self.held_karp(graph, u, S1)  # chiamata ricorsiva
+                if dist == INFINITY:
+                    time_passed = True
+                    break
 
-                    if dist + graph.get_adj_matrix(u, v) < min_dist:  # aggiorno nel caso sia una quantità minore
-                        min_dist = dist + graph.get_adj_matrix(u, v)
-                        min_prec = u
-                if not time_passed:
-                    self.partial_solution = (v, S)
+                if dist + graph.get_adj_matrix(u, v) < min_dist:  # aggiorno nel caso sia una quantità minore
+                    min_dist = dist + graph.get_adj_matrix(u, v)
+                    min_prec = u
+            if not time_passed:
+                self.partial_solution = (v, S)
 
-                graph.set_distances((v, S), min_dist)
-                graph.set_parents((v, S), min_prec)
-                self.min_dist = min_dist  # salvo il valore di mindist
-                return min_dist
+            graph.set_distances((v, S), min_dist)
+            graph.set_parents((v, S), min_prec)
+            self.min_dist = min_dist  # salvo il valore di mindist
+            return min_dist
 
-        return INFINITY
+        #return INFINITY

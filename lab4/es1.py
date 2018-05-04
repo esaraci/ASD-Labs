@@ -160,18 +160,18 @@ if __name__ == "__main__":
 
     graph = Graph(dataset, geo)
 
-    # T = prim(graph)
-    # color = {}
-    # for i in T:
-    #     color[i[0]] = Color.WHITE
-    # D = DFS_Visited(T, 0, [], color)
+    T = prim(graph)
+    color = {}
+    for i in T:
+        color[i[0]] = Color.WHITE
+    D = DFS_Visited(T, 0, [], color)
 
-    # print("PRIM:", get_cycle_cost(graph, D))
+    print("PRIM:", get_cycle_cost(graph, D))
     # print("HELD_KARP:", held_karp(graph, 0, lul))
     # print("RANDOM:", random_insertion(graph))
 
-    griffo = HeldKarpThread(graph, 0, lul)
-    griffo.start()
+    # griffo = HeldKarpThread(graph, 0, lul)
+    # griffo.start()
 
     # x = threading.Thread(target=held_karp, args=(graph, 0, lul)).start()
 
