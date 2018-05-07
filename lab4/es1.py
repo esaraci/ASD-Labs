@@ -68,7 +68,7 @@ if __name__ == "__main__":
     # removing comments and checking coordinate type
     geo = False
     c = 1
-    f_name = "datasets/pcb442.tsp"
+    f_name = "datasets/kroA100.tsp"
     with open(f_name) as f:
         line = f.readline()
         while line != "NODE_COORD_SECTION\n":

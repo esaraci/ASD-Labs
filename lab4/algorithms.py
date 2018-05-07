@@ -118,12 +118,13 @@ def random_insertion(G):
     # adding 3rd node, i do not need to perform any evaluation since i can attach it in only one way to C
     # C = existing cycle with 2 nodes added before
     extracted = random.sample(not_extracted, 1)[0]  # random.sample returns a list of length 1
-    C.append(extracted)
+    #C.append(extracted)
+    C.insert(1,extracted)
     not_extracted.remove(extracted)
     # END INITIALIZATION
 
     # BEGIN SELECTION
-    while len(not_extracted) is not 0:
+    while not_extracted:
         extracted = random.sample(not_extracted, 1)[0]
         not_extracted.remove(extracted)
 
@@ -138,8 +139,8 @@ def random_insertion(G):
                 j = 0
 
             # computing where (inside C) i need to insert "extracted" to minimize the increase of the cost
-            if adj_matrix[i][extracted] + adj_matrix[j][extracted] - adj_matrix[i][j] < min_:
-                min_ = adj_matrix[i][extracted] + adj_matrix[j][extracted] - adj_matrix[i][j]
+            if adj_matrix[C[i]][extracted] + adj_matrix[C[j]][extracted] - adj_matrix[C[i]][j] < min_:
+                min_ = adj_matrix[C[i]][extracted] + adj_matrix[C[j]][extracted] - adj_matrix[C[i]][C[j]]
                 edges = (i, j)
 
         # print("BEFORE", C)
