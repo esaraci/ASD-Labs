@@ -68,7 +68,7 @@ if __name__ == "__main__":
     # removing comments and checking coordinate type
     geo = False
     c = 1
-    f_name = "datasets/burma14.tsp"
+    f_name = "datasets/pcb442.tsp"
     with open(f_name) as f:
         line = f.readline()
         while line != "NODE_COORD_SECTION\n":
@@ -89,16 +89,16 @@ if __name__ == "__main__":
     # GENERATING GRAPH
     graph = Graph(dataset, geo)
 
-    pool = ThreadPool(processes=1)
-    result = pool.apply_async(held_karp, (graph, 0, lul), callback=log_result)
+    # pool = ThreadPool(processes=1)
+    # result = pool.apply_async(held_karp, (graph, 0, lul), callback=log_result)
+    # t = threading.Thread(target=waiter, args=(60*2, ))
+    # t.daemon = True
+    # t.start()
+    # result.get()
 
-    t = threading.Thread(target=waiter, args=(60*2, ))
-    t.daemon = True
-    t.start()
-    result.get()
-
+    print("RANDOM:", random_insertion(graph))
     # print("PRIM:", prim(graph))
-    # print("RANDOM:", random_insertion(graph))
+
 
 
 

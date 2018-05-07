@@ -109,7 +109,7 @@ def random_insertion(G):
     for i, val in enumerate(adj_matrix[0, 1:]):
         if val < min_:
             min_ = val
-            node_idx = i
+            node_idx = i+1  # non primo nodo
 
     # adding the second node
     C.append(node_idx)
@@ -142,6 +142,9 @@ def random_insertion(G):
                 min_ = adj_matrix[i][extracted] + adj_matrix[j][extracted] - adj_matrix[i][j]
                 edges = (i, j)
 
+        # print("BEFORE", C)
+        # print("NODO SCELTO", extracted)
+        # print("FRA", C[edges[0]], C[edges[1]])
         if edges[1] == 0:
             # j == 0, so i need to insert this node as the last node of the cycle, linked with the 0 (= the first node)
             # BEFORE: 0 --> v_1 ... --> v_n (--> 0)
@@ -152,6 +155,8 @@ def random_insertion(G):
             # BEFORE: i --> j
             # AFTER:  i --> extracted --> j
             C.insert(edges[1],  extracted)
+        #print(C)
+        #print(C)
 
     return _get_cycle_cost(G, C)
 
