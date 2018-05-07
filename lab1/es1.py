@@ -3,7 +3,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-edges = np.loadtxt('./cit-HepTh.txt', dtype=int)
+edges = np.loadtxt('./as19991212.txt', dtype=int)
 
 coda = edges[:, 0]
 testa = edges[:, 1]
@@ -57,8 +57,8 @@ print("media grado uscente")  # serve per esercizio 3
 print(av)
 
 fig, ax = plt.subplots()
-ax.set_xscale('log', basex=10)
-ax.set_yscale('log', basey=10)
+#ax.set_xscale('log', basex=10)
+#ax.set_yscale('log', basey=10)
 
 axes = plt.gca()
 # axes.set_xlim([0.9, 400])
