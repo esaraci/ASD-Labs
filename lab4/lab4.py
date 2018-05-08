@@ -16,6 +16,7 @@ INFINITY = float('inf')
 
 do_i_need_to_stop = False
 
+
 def held_karp(graph, v, S):
     """
     :param graph: Graph
@@ -28,7 +29,6 @@ def held_karp(graph, v, S):
     if do_i_need_to_stop is False:
         # Caso base
         if len(S) == 1:
-            # print("Caso base:", v)
             return graph.get_adj_matrix(v, 0)  # S contiene un unico elemento che è v, stiamo andando da 0 —> v
         elif graph.get_distances((v, S)) is not None:
             return graph.get_distances((v, S))
@@ -38,9 +38,6 @@ def held_karp(graph, v, S):
             S1 = tuple([u for u in S if u != v])
             for u in S1:
                 dist = held_karp(graph, u, S1)  # chiamata ricorsiva
-                # print("Dist:", dist)
-                # print("Arco attuale:", graph.get_adj_matrix(u, v))
-                # print("Confronto:", dist + graph.get_adj_matrix(u, v), mindist)
                 if dist + graph.get_adj_matrix(u, v) < min_dist:  # aggiorno nel caso sia una quantità minore
                     min_dist = dist + graph.get_adj_matrix(u, v)
                     min_prec = u
@@ -59,7 +56,7 @@ def waiter(sec):
     time.sleep(sec)
     global do_i_need_to_stop
     do_i_need_to_stop = True
-    print("STOPPING THREAD")
+    print("Il Thread si è fermato dopo {} secondi".format(sec))
 
 
 if __name__ == "__main__":
@@ -89,14 +86,14 @@ if __name__ == "__main__":
     # GENERATING GRAPH
     graph = Graph(dataset, geo)
 
-    # pool = ThreadPool(processes=1)
-    # result = pool.apply_async(held_karp, (graph, 0, lul), callback=log_result)
-    # t = threading.Thread(target=waiter, args=(60*2, ))
-    # t.daemon = True
-    # t.start()
-    # result.get()
+    pool = ThreadPool(processes=1)
+    result = pool.apply_async(held_karp, (graph, 0, lul), callback=log_result)
+    t = threading.Thread(target=waiter, args=(60*2, ))
+    t.daemon = True
+    t.start()
+    result.get()
 
-    print("RANDOM:", random_insertion(graph))
+    # print("RANDOM:", random_insertion(graph))
     # print("PRIM:", prim(graph))
 
 

@@ -13,9 +13,6 @@ class Color(Enum):
     GREY = 1
     BLACK = 2
 
-
-do_i_need_to_stop = False
-
 # _sons_of returns the sons of node v in the tree T
 # used by DFS
 def _sons_of(T, v):
@@ -143,9 +140,6 @@ def random_insertion(G):
                 min_ = adj_matrix[C[i]][extracted] + adj_matrix[C[j]][extracted] - adj_matrix[C[i]][C[j]]
                 edges = (i, j)
 
-        # print("BEFORE", C)
-        # print("NODO SCELTO", extracted)
-        # print("FRA", C[edges[0]], C[edges[1]])
         if edges[1] == 0:
             # j == 0, so i need to insert this node as the last node of the cycle, linked with the 0 (= the first node)
             # BEFORE: 0 --> v_1 ... --> v_n (--> 0)
@@ -156,8 +150,6 @@ def random_insertion(G):
             # BEFORE: i --> j
             # AFTER:  i --> extracted --> j
             C.insert(edges[1],  extracted)
-        #print(C)
-        #print(C)
 
     return _get_cycle_cost(G, C)
 
