@@ -4,14 +4,12 @@ from graph import *
 import random
 import numpy as np
 
-# constants
-INFINITY = float('inf')
-
 
 class Color(Enum):
     WHITE = 0
     GREY = 1
     BLACK = 2
+
 
 # _sons_of returns the sons of node v in the tree T
 # used by DFS
