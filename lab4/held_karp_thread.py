@@ -16,8 +16,6 @@ class HeldKarpThread(threading.Thread):
     def get_results(self):
         return self.min_dist
 
-
-
     def run(self):
         self.timestamp = int(time.time())
         tmp = self.held_karp(self.graph, self.v, self.S)
