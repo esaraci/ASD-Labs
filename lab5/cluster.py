@@ -10,9 +10,10 @@ class Cluster:
         """
         self.elements = elem  # array di tuple di punti (xi, yi)
         self.centroid = self.calculate_centroid()
+        self.need_recalculus = False  # ci dice se è necessario ricalcolare il centroide del cluster
 
     def __repr__(self):
-        return str(self.centroid)
+        return str(self.calculate_centroid())
 
     def calculate_centroid(self):
         """
@@ -26,20 +27,24 @@ class Cluster:
             sum_y += self.elements[i][1]
         centroid = (sum_x/n, sum_y/n)
 
+        self.need_recalculus = False
+
         return centroid
 
     def add_element(self, x):
         self.elements.append(x)
-        self.centroid = self.calculate_centroid()
+        self.need_recalculus = True
 
     def get_elements(self):
         return self.elements
 
     def get_centroid(self):
+        if not self.need_recalculus:
+            self.calculate_centroid()
         return self.centroid
 
     def union_cluster(self, c):
         self.elements.extend(c.get_elements())
-        self.centroid = self.calculate_centroid()
+        self.need_recalculus = True
 
 
