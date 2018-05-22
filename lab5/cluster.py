@@ -47,4 +47,10 @@ class Cluster:
         self.elements.extend(c.get_elements())
         self.need_recalculus = True
 
+    def __lt__(self, other):
+        return self.get_centroid() < other.get_centroid()
 
+    def __add__(self, other):
+        c1 = self.get_centroid()
+        c2 = other.get_centroid()
+        return c1[0]+c2[0], c1[1]+c2[1]
