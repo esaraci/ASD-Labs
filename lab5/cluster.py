@@ -62,3 +62,14 @@ class Cluster:
         c1 = self.get_centroid()
         c2 = other.get_centroid()
         return c1[0]+c2[0], c1[1]+c2[1]
+
+    def __sub__(self, other):
+        c1 = self.get_centroid()
+        c2 = other.get_centroid()
+        return c1[0]-c2[0], c1[1]-c2[1]
+
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if isinstance(self, other.__class__):
+            return self.get_centroid() == other.get_centroid()
+        return False
