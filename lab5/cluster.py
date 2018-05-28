@@ -25,7 +25,11 @@ class Cluster:
         for i in range(n):
             sum_x += self.elements[i][0]
             sum_y += self.elements[i][1]
-        centroid = (sum_x/n, sum_y/n)
+
+        if n > 0:
+            centroid = (sum_x/n, sum_y/n)
+        else:
+            centroid = None
 
         self.need_recalculus = False
 
@@ -35,11 +39,15 @@ class Cluster:
         self.elements.append(x)
         self.need_recalculus = True
 
+    # remove element
+    def remove_element(self, x):
+        self.elements
+
     def get_elements(self):
         return self.elements
 
     def get_centroid(self):
-        if not self.need_recalculus:
+        if self.need_recalculus:
             self.calculate_centroid()
         return self.centroid
 
