@@ -15,5 +15,5 @@ if __name__ == '__main__':
     coordinates = [(x[i], y[i]) for i in range(n)]
 
     # print(hierarchical_clustering(coordinates, 15))
-    kmeans(coordinates, 15, pop, q=5)
+    clusters = kmeans(coordinates, 15, pop, q=15)
 

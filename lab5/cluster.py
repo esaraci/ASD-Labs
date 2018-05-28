@@ -27,21 +27,21 @@ class Cluster:
             sum_y += self.elements[i][1]
 
         if n > 0:
-            centroid = (sum_x/n, sum_y/n)
+            self.centroid = (sum_x/n, sum_y/n)
         else:
-            centroid = None
+            self.centroid = None
 
         self.need_recalculus = False
 
-        return centroid
+        return self.centroid
 
     def add_element(self, x):
         self.elements.append(x)
         self.need_recalculus = True
 
-    # remove element
-    def remove_element(self, x):
-        self.elements
+    # funzione per rimuovere un elemento
+    # potrebbe servire creare una classe citta, o punto in cui abbiamo tutti i dati
+    # con in piu un campo int: cluster che indica a che cluster appartiene
 
     def get_elements(self):
         return self.elements

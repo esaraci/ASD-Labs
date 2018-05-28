@@ -9,7 +9,7 @@ def euclidean_distance(p1, p2):
     return distance.euclidean(p1, p2)
 
 
-def kmeans(P, k, pop, q=0):
+def kmeans(P, k, pop, q=1):
     """
 
     :param P: points, (x, y)
@@ -26,9 +26,10 @@ def kmeans(P, k, pop, q=0):
     l.sort(key=lambda x: x[1], reverse=True)
     centers = [l[i][0] for i in range(k)]
 
-    clusters = [Cluster([]) for i in range(k)]
+    clusters = []
     for i in range(q):
         # for each iteration
+        clusters = [Cluster([]) for i in range(k)]
         for j in range(n):
             # for each point
             min_dist = INFINITY
@@ -42,22 +43,15 @@ def kmeans(P, k, pop, q=0):
 
             clusters[min_c].add_element(P[j])
 
-            # if this is not the first iteration
-            # we need to remove the P[j] from its previous cluster
-            # if i != 0:
-            # remove topkuk
-            # print("Ho aggiunto P[j]", P[j])
-
         # recomputing centroids for next iteration
         for idx in range(k):
             if clusters[idx].get_centroid() is not None:
                 centers[idx] = clusters[idx].get_centroid()
 
-        print("##### ITERATION {} #####".format(i))
-        print("CENTERS:", centers)
-        lens = [len(clusters[i].get_elements()) for i in range(k)]
-        print("CARDINALITY:", lens)
-        print("SUM: {}/{}".format(sum(lens), n))
+        # print("##### ITERATION {} #####".format(i))
+        # print("CENTERS:", centers)
+        # lens = [len(clusters[i].get_elements()) for i in range(k)]
+        # print("CARDINALITY:", lens)
+        # print("SUM: {}/{}".format(sum(lens), n))
 
-    print(clusters)
     return clusters
