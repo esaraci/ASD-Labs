@@ -17,16 +17,16 @@ def hierarchical_clustering(P, k):
 
         to_be_unified = fast_closest_pair(clusters, S)
 
-        # print("to be unified", to_be_unified)
+        print("to be unified", to_be_unified)
         to_be_unified[1].union_cluster(to_be_unified[2])
 
-        # print("clusters", clusters)
-        # print("S:", S)
+        print("clusters", clusters)
+        print("S:", S)
 
         clusters.remove(to_be_unified[2])
         S.remove(to_be_unified[2])
 
-        # print("clusters_update", clusters)
-        # print("S_update:", S)
+        print("clusters_update", clusters)
+        print("S_update:", S)
 
     return clusters
