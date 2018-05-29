@@ -23,9 +23,8 @@ def closest_pair_strip(S, mid, d, P):
     k = len(S1)-1
 
     for u in range(k-2):
-        for v in range(u, min(u+3, n-1)+1):
+        for v in range(u+1, min(u+3, n-1)):
             (d, i, j) = min((d, i, j), (euclidean_distance(S1[u].get_centroid(), S1[v].get_centroid()), S1[u], S1[v]))
-
     return d, i, j
 
 

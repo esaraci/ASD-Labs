@@ -7,7 +7,7 @@ import seaborn as sns
 import itertools
 
 if __name__ == '__main__':
-    f_name = "unifiedCancerData/unifiedCancerData_111.csv"
+    f_name = "unifiedCancerData/unifiedCancerData_896.csv"
     dataset = np.loadtxt(f_name, dtype=float, delimiter=',')
 
     n = len(dataset)
@@ -22,8 +22,6 @@ if __name__ == '__main__':
 
     clusters = hierarchical_clustering(coordinates, 15)
     # clusters = kmeans(coordinates, number_of_clusters, pop, q=5)
-
-    print(sum([len(cluster.get_elements()) for cluster in clusters]))
 
     img = plt.imread("./immagini/USA_Counties.png")
     fig, ax = plt.subplots()

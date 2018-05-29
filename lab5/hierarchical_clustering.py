@@ -35,6 +35,4 @@ def hierarchical_clustering(P, k):
 
         print("lunghezza P e S", len(clusters), len(S))
 
-        print("lunghezza clusters", sum([len(cluster.get_elements()) for cluster in clusters]))
-
     return clusters

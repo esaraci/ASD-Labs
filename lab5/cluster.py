@@ -58,6 +58,7 @@ class Cluster:
 
     def union_cluster(self, c):
         # self.elements.extend(c.get_elements())
+
         for element in c.get_elements():
             self.elements.append(element)
 
