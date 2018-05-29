@@ -3,8 +3,6 @@ from hierarchical_clustering import *
 from kmeans import *
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import seaborn as sns
-import itertools
 
 if __name__ == '__main__':
     f_name = "unifiedCancerData/unifiedCancerData_290.csv"
@@ -30,15 +28,22 @@ if __name__ == '__main__':
 
     # palette = itertools.cycle(sns.color_palette())
 
-    colors = cm.rainbow(np.linspace(0, 1, number_of_clusters))
-    for cluster, c in zip(clusters, colors):
+    colors = np.asarray(cm.rainbow(np.linspace(0, 1, number_of_clusters)))
+    for cluster in clusters:
         elements = cluster.get_elements()
         centroid = cluster.get_centroid()
+        # get random index
+        ind = np.random.choice(colors.shape[0])
+        # get random color from colors
+        c = colors[ind]
+
         for element in elements:
             # sns.pointplot(element[0], element[1], color=next(palette))
             ax.scatter(element[0], element[1], color=c)
 
+        # delete color so it won't be picked in the future
+        colors = np.delete(colors, ind, 0)
+
         ax.scatter(centroid[0], centroid[1], color='black')
 
     plt.show()
-

@@ -11,7 +11,7 @@ def hierarchical_clustering(P, k):
 
     # creo i cluster da usare successivamente
     clusters = [((point[0], point[1]), Cluster([point], i)) for i, point in enumerate(P)]  # tuple (centroide, clusters)
-    print(clusters)
+    # print(clusters)
     S = [((point[0], point[1]), Cluster([point], i)) for i, point in enumerate(P)]  # tuple (centroide, cluster)
 
     while len(clusters) > k:
@@ -51,8 +51,8 @@ def hierarchical_clustering(P, k):
         # print("clusters_update", clusters)
         # print("S_update:", S)
 
-        print("lunghezza P e S", len(clusters), len(S))
+        # print("lunghezza P e S", len(clusters), len(S))
 
-        print("lunghezza clusters", sum([len(cluster[1].get_elements()) for cluster in clusters]))
+        # print("lunghezza clusters", sum([len(cluster[1].get_elements()) for cluster in clusters]))
 
     return [cluster[1] for cluster in clusters]

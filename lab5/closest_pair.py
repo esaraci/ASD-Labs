@@ -1,6 +1,6 @@
 import math
 from scipy.spatial import distance
-import numpy as np
+# import numpy as np
 
 INFINITY = float('inf')
 
@@ -23,8 +23,8 @@ def closest_pair_strip(S, mid, d, P):
 
     k = len(S1)
 
-    for u in range(k-3):
-        for v in range(u+1, min(u+3, n-1)+1):
+    for u in range(k - 3):
+        for v in range(u + 1, min(u + 3, n - 1) + 1):
             # (d, i, j) = min((d, i, j), (euclidean_distance((S1[u])[1].get_centroid(), (S1[v])[1].get_centroid()), S1[u], S1[v]))
             (d, i, j) = min((d, i, j), (euclidean_distance((S1[u])[0], (S1[v])[0]), S1[u], S1[v]))
     return d, i, j
@@ -65,7 +65,7 @@ def fast_closest_pair(P, S):
     if n <= 3:
         return slow_closest_pair(P)
     else:
-        m = math.floor(n/2)
+        m = math.floor(n / 2)
         pl = []
         pr = []
         for i, point in enumerate(P):
@@ -76,10 +76,10 @@ def fast_closest_pair(P, S):
         sl, sr = split(S, pl, pr)
         (d, c1, c2) = min(fast_closest_pair(pl, sl), fast_closest_pair(pr, sr))
 
-        x1 = (P[m-1])[0]  # prendo il centroide
+        x1 = (P[m - 1])[0]  # prendo il centroide
         x2 = (P[m])[0]  # prendo il centroide
 
-        m = (x1+x2)
+        m = (x1 + x2)
         # print(m)
         mid = (m[0]/2, m[1]/2)
         return min((d, c1, c2), closest_pair_strip(S, mid, d, P))
