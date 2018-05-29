@@ -4,13 +4,15 @@ classe che gestisce il cluster
 
 
 class Cluster:
-    def __init__(self, elem):
+    def __init__(self, elem, id):
         """
         :param: elem: array di elementi per inizializzazione
         """
         self.elements = elem  # array di tuple di punti (xi, yi)
         self.centroid = self.calculate_centroid()
         self.need_recalculus = False  # ci dice se è necessario ricalcolare il centroide del cluster
+
+        self.id = id
 
     def __repr__(self):
         return str(self.calculate_centroid())
@@ -51,8 +53,14 @@ class Cluster:
             self.calculate_centroid()
         return self.centroid
 
+    def get_id(self):
+        return self.id
+
     def union_cluster(self, c):
-        self.elements.extend(c.get_elements())
+        # self.elements.extend(c.get_elements())
+        for element in c.get_elements():
+            self.elements.append(element)
+
         self.need_recalculus = True
 
     def __lt__(self, other):
@@ -71,5 +79,5 @@ class Cluster:
     def __eq__(self, other):
         """Overrides the default implementation"""
         if isinstance(self, other.__class__):
-            return self.get_centroid() == other.get_centroid()
+            return self.id == other.get_id()
         return False
