@@ -15,7 +15,13 @@ class Cluster:
         self.id = id
 
     def __repr__(self):
-        return str(self.calculate_centroid())
+        return str(self.id)
+
+    def sort_x(self):
+        self.elements.sort()
+
+    def sort_y(self):
+        self.elements.sort(key=lambda x: x[1])
 
     def calculate_centroid(self):
         """
@@ -58,7 +64,6 @@ class Cluster:
 
     def union_cluster(self, c):
         # self.elements.extend(c.get_elements())
-
         for element in c.get_elements():
             self.elements.append(element)
 
