@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 if __name__ == '__main__':
-    f_name = "unifiedCancerData/unifiedCancerData_290.csv"
+    f_name = "unifiedCancerData/unifiedCancerData_896.csv"
     dataset = np.loadtxt(f_name, dtype=float, delimiter=',')
 
     n = len(dataset)
 
-    number_of_clusters = 14
+    number_of_clusters = 15
 
     x = dataset[:, 1]  # coordinate x
     y = dataset[:, 2]  # coordinate y
@@ -38,9 +38,9 @@ if __name__ == '__main__':
         c = colors[ind]
 
         for element in elements:
+            # ax.plot((centroid[0], centroid[1]), (element[0], element[1]))
             # sns.pointplot(element[0], element[1], color=next(palette))
             ax.scatter(element[0], element[1], color=c)
-
         # delete color so it won't be picked in the future
         colors = np.delete(colors, ind, 0)
 

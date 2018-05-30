@@ -29,7 +29,7 @@ def kmeans(P, k, pop, q=1):
     clusters = []
     for i in range(q):
         # for each iteration
-        clusters = [Cluster([], i) for i in range(k)]
+        clusters = [Cluster([]) for _ in range(k)]
         for j in range(n):
             # for each point
             min_dist = INFINITY

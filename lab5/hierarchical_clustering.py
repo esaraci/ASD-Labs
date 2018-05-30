@@ -10,9 +10,9 @@ def hierarchical_clustering(P, k):
     # temp.sort(key=lambda x: x[1])
 
     # creo i cluster da usare successivamente
-    clusters = [((point[0], point[1]), Cluster([point], i)) for i, point in enumerate(P)]  # tuple (centroide, clusters)
+    clusters = [((point[0], point[1]), Cluster([point])) for point in P]  # tuple (centroide, clusters)
     # print(clusters)
-    S = [((point[0], point[1]), Cluster([point], i)) for i, point in enumerate(P)]  # tuple (centroide, cluster)
+    S = [((point[0], point[1]), Cluster([point])) for point in P]  # tuple (centroide, cluster)
 
     while len(clusters) > k:
 
@@ -26,12 +26,8 @@ def hierarchical_clustering(P, k):
         # print("cluster prende elementi", len((to_be_unified[1])[1].get_elements()))
         # clusters[clusters.index(to_be_unified[1])].union_cluster(to_be_unified[2])
 
-        new_cluster = Cluster([], len(clusters)+1)
-
-        for element in (to_be_unified[1])[1].get_elements():
-            new_cluster.add_element(element)
-        for element in (to_be_unified[2])[1].get_elements():
-            new_cluster.add_element(element)
+        new_elements = to_be_unified[1][1].get_elements() + to_be_unified[2][1].get_elements()
+        new_cluster = Cluster(new_elements)
 
         # print("cluster da unire", len(to_be_unified[2].get_elements()))
         # print("cluster unito", len(to_be_unified[1].get_elements()))
