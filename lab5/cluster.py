@@ -45,10 +45,6 @@ class Cluster:
         self.elements.append(x)
         self.need_recalculus = True
 
-    # funzione per rimuovere un elemento
-    # potrebbe servire creare una classe citta, o punto in cui abbiamo tutti i dati
-    # con in piu un campo int: cluster che indica a che cluster appartiene
-
     def get_elements(self):
         return self.elements
 

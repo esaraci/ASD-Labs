@@ -1,12 +1,12 @@
 from cluster import Cluster
-from scipy.spatial import distance
+from math import sqrt
 
 
 INFINITY = float('inf')
 
 
 def euclidean_distance(p1, p2):
-    return distance.euclidean(p1, p2)
+    return sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
 
 
 def kmeans(P, k, pop, q=1):
