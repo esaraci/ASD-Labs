@@ -38,11 +38,13 @@ def hierarchical_clustering(P, k):
 
         clusters.remove(to_be_unified[2])
         clusters.remove(to_be_unified[1])
-        S.remove(to_be_unified[2])
-        S.remove(to_be_unified[1])
+        # S.remove(to_be_unified[2])
+        # S.remove(to_be_unified[1])
 
         clusters.append((new_cluster.get_centroid(), new_cluster))
-        S.append((new_cluster.get_centroid(), new_cluster))
+        # S.append((new_cluster.get_centroid(), new_cluster))
+
+        S = clusters[:]
 
         # print("clusters_update", clusters)
         # print("S_update:", S)
