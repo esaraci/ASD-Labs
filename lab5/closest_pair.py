@@ -1,4 +1,5 @@
 from math import floor, sqrt
+import copy
 
 INFINITY = float('inf')
 
@@ -47,15 +48,19 @@ def slow_closest_pair(clusters):
 
 
 def split(S, pl, pr):
-    n = len(S)
-    sl = []
-    sr = []
+    # n = len(S)
+    # sl = []
+    # sr = []
+    sl = pl[:]
+    sr = pr[:]
 
-    for i in range(n):
-        if S[i] in pl:
-            sl.append(S[i])
-        else:
-            sr.append(S[i])
+    sl.sort(key=lambda x: x[0][1])
+    sr.sort(key=lambda x: x[0][1])
+    # for i in range(n):
+    #     if S[i] in pl:
+    #         sl.append(S[i])
+    #     else:
+    #         sr.append(S[i])
     return sl, sr
 
 
@@ -70,6 +75,7 @@ def fast_closest_pair(P, S):
         pr = P[m:]
 
         sl, sr = split(S, pl, pr)
+
         (d, c1, c2) = min(fast_closest_pair(pl, sl), fast_closest_pair(pr, sr))
 
         x1 = (P[m - 1])[0][0]  # prendo la x del centroide

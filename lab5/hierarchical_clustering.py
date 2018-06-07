@@ -12,7 +12,7 @@ def hierarchical_clustering(P, k):
     # creo i cluster da usare successivamente
     clusters = [((point[0], point[1]), Cluster([point])) for point in P]  # tuple (centroide, clusters)
     # print(clusters)
-    S = [((point[0], point[1]), Cluster([point])) for point in P]  # tuple (centroide, cluster)
+    S = clusters[:]
 
     while len(clusters) > k:
 

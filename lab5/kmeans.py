@@ -14,8 +14,8 @@ def kmeans(P, k, pop, q=1):
 
     :param P: points, (x, y)
     :param k: number of clusters
-    :param q: iterations
     :param pop: population of the cities, need for choosing the centers of the k clusters
+    :param q: iterations
     :return:
     """
 
