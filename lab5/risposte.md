@@ -48,7 +48,16 @@ rispetto all'algoritmo k-means. Rispetto a quest'ultimo, infatti, l'immagine pro
 mostra dei cluster più delineati.
 
 # Domanda 8
-
 In base a quanto detto nella domanda 7 è chiaro che l'algoritmo **kmeans** richieda una maggiore supervione umana. E'
 necessario infatti controllare che il numero di iterazioni sia sufficiente per seperare bene i cluster con una distorsione
-bassa. Quindi è necessario trovare il valore migliore per l'iperparametro q della funzione k-means. 
+bassa. Quindi è necessario trovare il valore migliore per l'iperparametro q della funzione k-means.
+
+
+# Domanda 10
+Nel dataset con 111 contee hierarchical clustering risulta più performante di k-means nel numero di cluster considerati. In generale però non è vero che uno degli algoritmi ottenga sempre risultati migliori dell'altro, infatti negli altri due dataset le performance sono contrastanti risultando migliori per un algoritmo o per l'altro a seconda del numero di clusters, forza no free lunch theorem
+
+
+
+
+
+

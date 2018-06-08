@@ -3,7 +3,6 @@ from hierarchical_clustering import *
 from kmeans import *
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import time
 
 
 def error(cluster):
@@ -24,22 +23,41 @@ def distortion(clusters):
 
 
 if __name__ == '__main__':
-    f_code = "290"
+    f_code = "896"
     f_name = "unifiedCancerData/unifiedCancerData_{}.csv".format(f_code)
     dataset = np.loadtxt(f_name, dtype=float, delimiter=',')
 
     n = len(dataset)
-    number_of_clusters = 9
+    number_of_clusters = 5
     x = dataset[:, 1]  # coordinate x
     y = dataset[:, 2]  # coordinate y
     pop = dataset[:, 3]  # population
     coordinates = [(x[i], y[i]) for i in range(n)]  # points
 
-    start_time = time.time()
     # clusters = hierarchical_clustering(coordinates, number_of_clusters)
-    clusters = kmeans(coordinates, number_of_clusters, pop, q=6)
-    end_time = time.time() - start_time
-    print("TEMPO: {}s".format(end_time))
+    # clusters = kmeans(coordinates, number_of_clusters, pop, q=6)
+
+    kmeans_distortion = []
+    for i in range(6, 21):
+        clusters = kmeans(coordinates, i, pop, q=5)
+        kmeans_distortion.append(distortion(clusters))
+
+    clusters, distortion_clusters = hierarchical_clustering(coordinates, number_of_clusters)
+    hierarchical_distortion = [distortion(c) for c in distortion_clusters]
+    print(hierarchical_distortion)
+
+    plt.plot(np.arange(6, 21), hierarchical_distortion[::-1])
+    plt.plot(np.arange(6, 21), kmeans_distortion)
+    plt.legend(labels=["Hierarchical", "K-means"])
+    plt.xlabel("Number of clusters")
+    plt.ylabel("Distortion")
+    plt.title("Distortion graph of dataset: {} counties".format(f_code))
+    plt.gca().invert_xaxis()
+    plt.xticks(np.arange(6, 21, 1))
+    plt.grid()
+    plt.savefig("./risposte/distortion_{}_domanda9.png".format(f_code))
+    plt.show()
+
 
     img = plt.imread("./immagini/USA_Counties.png")
     fig, ax = plt.subplots()
@@ -68,6 +86,4 @@ if __name__ == '__main__':
         ax.scatter(centroid[0], centroid[1], color='black')
 
     # plt.savefig("risposte/kmeans_{}_domanda5.png".format(f_code))
-    plt.show()
-
-    print("Distorsione:", distortion(clusters))
+    # plt.show()

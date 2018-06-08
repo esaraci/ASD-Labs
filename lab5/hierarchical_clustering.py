@@ -14,10 +14,13 @@ def hierarchical_clustering(P, k):
     # print(clusters)
     S = clusters[:]
 
+    distortion_clusters = []
     while len(clusters) > k:
 
-        clusters.sort(key=lambda x: (x[0])[0])
+        if 5 < len(clusters) < 21:
+            distortion_clusters.append([cluster[1] for cluster in clusters])
 
+        clusters.sort(key=lambda x: (x[0])[0])
         S.sort(key=lambda x: (x[0])[1])
 
         to_be_unified = fast_closest_pair(clusters, S)
@@ -53,4 +56,4 @@ def hierarchical_clustering(P, k):
 
         # print("lunghezza clusters", sum([len(cluster[1].get_elements()) for cluster in clusters]))
 
-    return [cluster[1] for cluster in clusters]
+    return [cluster[1] for cluster in clusters], distortion_clusters
