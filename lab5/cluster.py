@@ -12,8 +12,8 @@ class Cluster:
         self.centroid = self.calculate_centroid()
         self.need_recalculus = False  # ci dice se è necessario ricalcolare il centroide del cluster
 
-    def __repr__(self):
-        return str(self.centroid)
+    # def __repr__(self):
+    #    return str(self.centroid)
 
     def sort_x(self):
         self.elements.sort()
@@ -78,3 +78,6 @@ class Cluster:
         if isinstance(self, other.__class__):
             return self.centroid == other.get_centroid()
         return False
+
+    def __hash__(self):
+        return hash(str(self))
