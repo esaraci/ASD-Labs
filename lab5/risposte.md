@@ -1,5 +1,11 @@
 
-# Risposte Laboratorio 5
+# Risposte Laboratorio 6
+
+## Membri del gruppo:
+
+* Francesca Del Nin (1179732)
+* Stefano Lia (1177743)
+* Eugen Saraci (1171697)
 
 ## Domanda 3
 
@@ -15,14 +21,14 @@ totale dell'algoritmo diventa O(n^2(logn)).
 
 Quindi il più veloce è chiaramente **kmeans**.
               
-# Domanda 6
+## Domanda 6
 
 | Algoritmi | Distorsione
 |:---:|:---:|
 | K-means | 2.814 x 10^11|
 | Hierarchical Clustering | 2.251 x 10^11 |
 
-# Domanda 7
+## Domanda 7
 
 La differenza che si crea tra i cluster prodotti è dovuta a come i due algoritmi procedono
 nella creazione dei cluster. Per quanto riguarda l'algoritmo **k-means**, esso sceglie come centroidi iniziali le città 
@@ -47,14 +53,19 @@ conforme i punti nella mappa individuando ed unendo i punti più vicini tra di l
 rispetto all'algoritmo k-means. Rispetto a quest'ultimo, infatti, l'immagine prodotta dall'algorimo hieariccal clustering
 mostra dei cluster più delineati.
 
-# Domanda 8
+## Domanda 8
 In base a quanto detto nella domanda 7 è chiaro che l'algoritmo **kmeans** richieda una maggiore supervione umana. E'
 necessario infatti controllare che il numero di iterazioni sia sufficiente per seperare bene i cluster con una distorsione
 bassa. Quindi è necessario trovare il valore migliore per l'iperparametro q della funzione k-means.
 
 
-# Domanda 10
-Nel dataset con 111 contee hierarchical clustering risulta più performante di k-means nel numero di cluster considerati. In generale però non è vero che uno degli algoritmi ottenga sempre risultati migliori dell'altro, infatti negli altri due dataset le performance sono contrastanti risultando migliori per un algoritmo o per l'altro a seconda del numero di clusters, forza no free lunch theorem
+## Domanda 10
+
+Le performance danno risposte contrastanti. Sebbene nel cluster con 111 contee l'algoritmo hierarchical 
+clustering sembra avere delle performance migliori, negli altri due casi non è evidente quale dei due sia migliore, Infatti,
+i risultati prodotti sembrano essere migliori per un algoritmo o per l'altro a seconda del numero di cluser considerato. 
+Questo caso sembra rientrare nel teorema denominato **no free lunch theorem**, dal momento nessuno dei due algoritmi
+produce in modo coerente risultati con distorsione inferiore rispetto all'altro.
 
 
 
