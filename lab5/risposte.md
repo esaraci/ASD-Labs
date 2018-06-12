@@ -10,8 +10,8 @@
 ## Domanda 3
 
 L'algoritmo kmeans ha una complessità O(q\*n\*k) mentre hierarchical clustering, che avrebbe complessità O(n^3)
-usando la funzione *SlowClosestPair*, ha complessità O((n-k)(nlogn)) utilizzando *FastClosestPair* dal momento in 
-cui quest'ultima ha complessità 0(nlog(n)).
+usando la funzione *SlowClosestPair*, ha complessità O((n-k)(n\*log(n))) utilizzando *FastClosestPair* dal momento in 
+cui quest'ultima ha complessità O(n\*log(n)).
 Assumendo che k-means usi un piccolo numero di iterazioni q ed un numero di cluster k piccolo rispetto al numero dei
 punti n allora entrambi i numeri possono essere considerati come costanti e di conseguenza il tempo asintotico
 di k-means può essere considerato approsimativamente lineare sul numero dei punti n.

@@ -11,7 +11,6 @@ def euclidean_distance(p1, p2):
 
 def kmeans(P, k, pop, q=1):
     """
-
     :param P: points, (x, y)
     :param k: number of clusters
     :param pop: population of the cities, need for choosing the centers of the k clusters
@@ -47,11 +46,5 @@ def kmeans(P, k, pop, q=1):
         for idx in range(k):
             if clusters[idx].get_centroid() is not None:
                 centers[idx] = clusters[idx].get_centroid()
-
-        # print("##### ITERATION {} #####".format(i))
-        # print("CENTERS:", centers)
-        # lens = [len(clusters[i].get_elements()) for i in range(k)]
-        # print("CARDINALITY:", lens)
-        # print("SUM: {}/{}".format(sum(lens), n))
 
     return clusters
